@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fundamentos de Biotecnología Industrial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            background: #34495e;
+            padding: 15px 0;
+            margin: 20px 0;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-menu a:hover {
+            background: #2c3e50;
+            transform: translateY(-2px);
+        }
+
+        .section {
+            margin: 40px 0;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #3498db;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #34495e;
+            margin: 25px 0 15px 0;
+            font-size: 1.4em;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 30px 0;
+            padding-left: 80px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 22px;
+            width: 16px;
+            height: 16px;
+            background: #3498db;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #3498db;
+        }
+
+        .timeline-content {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .process-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .process-step {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .process-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .process-step h4 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .organism-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .organism-card:hover {
+            border-color: #3498db;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        }
+
+        .formula {
+            background: #f1f3f4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin: 20px 0;
+            border: 2px dashed #6c757d;
+        }
+
+        .challenge-section {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            color: #2c3e50;
+            margin-top: 50px;
+            border-left: 5px solid #e74c3c;
+        }
+
+        .challenge-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #e74c3c;
+        }
+
+        .challenge-card h4 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .level {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .level-beginner { background: #d4edda; color: #155724; }
+        .level-intermediate { background: #fff3cd; color: #856404; }
+        .level-advanced { background: #f8d7da; color: #721c24; }
+
+        .image-placeholder {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            color: #6c757d;
+            margin: 20px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .comparison-table th {
+            background: #34495e;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .nav-menu a {
+                display: block;
+                margin: 5px 0;
+            }
+
+            .process-flow {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧬 Fundamentos de Biotecnología Industrial</h1>
+            <p class="subtitle">Una Introducción Completa a los Microorganismos y la Fermentación</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Curso de Bioingeniería - Prof. Gerd Seibold</p>
+        </header>
+
+        <nav class="nav-menu">
+            <a href="#microorganisms">Microorganismos</a>
+            <a href="#history">Historia</a>
+            <a href="#discoveries">Descubrimientos</a>
+            <a href="#modern">Biotecnología Moderna</a>
+            <a href="#challenges">Retos</a>
+        </nav>
+
+        <section id="microorganisms" class="section">
+            <h2>🦠 Introducción a los Microorganismos</h2>
+            
+            <div class="highlight-box">
+                <h3>¿Qué son los microorganismos?</h3>
+                <p>Los microorganismos son organismos microscópicos que pueden ser observados únicamente a través de un microscopio. Su tamaño típico es de aproximadamente 0.5 micrómetros de diámetro, 100 veces más pequeños que un cabello humano (50 micrómetros).</p>
+            </div>
+
+            <div style="text-align: center; margin: 20px 0;">
+                <img src="file:///C:/Users/pblva/OneDrive%20-%20QFplus/PUCE/2025/2025_I/Operaciones_Unitarias/Bioreactor/imagenes/image1.png" alt="Comparación de tamaños - Estudiantes DTU vs Cabello humano vs Bacteria" 
+                     style="width: 100%; max-width: 700px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                <p style="font-style: italic; color: #6c757d; margin-top: 10px;">
+                    Comparación de tamaños: Estudiantes DTU (1.5-2m) vs Cabello humano (50 μm) vs Bacteria (0.5 μm)
+                </p>
+            </div>
+
+            <h3>Aplicaciones en Biotecnología Industrial</h3>
+            <div class="process-flow">
+                <div class="process-step">
+                    <h4>🧫 Producción de Células</h4>
+                    <p>Levaduras para la industria panadera</p>
+                </div>
+                <div class="process-step">
+                    <h4>🧪 Productos Celulares</h4>
+                    <p>Enzimas, alcohol, proteínas terapéuticas, aditivos alimentarios</p>
+                </div>
+                <div class="process-step">
+                    <h4>♻️ Bioconversiones</h4>
+                    <p>Transformación de sustratos en productos, detoxificación</p>
+                </div>
+            </div>
+
+            <h3>Tipos de Microorganismos</h3>
+            <div class="organism-card">
+                <h4>Células Procariotas (Bacterias y Arqueas)</h4>
+                <ul>
+                    <li><strong>Estructura:</strong> Pared celular, membrana citoplasmática, citoplasma</li>
+                    <li><strong>Material genético:</strong> Nucleoide (cromosoma) y plásmidos</li>
+                    <li><strong>Organelos:</strong> Ribosomas, vesículas de almacenamiento</li>
+                    <li><strong>Estructuras externas:</strong> Pili (adhesión), flagelos (movimiento)</li>
+                </ul>
+            </div>
+
+            <div class="organism-card">
+                <h4>Células Eucariotas (Levaduras, Hongos, Protozoos, Algas)</h4>
+                <p><em>Ejemplo: Saccharomyces cerevisiae (levadura de panadería)</em></p>
+                <ul>
+                    <li><strong>Núcleo:</strong> DNA rodeado por membrana nuclear con poros</li>
+                    <li><strong>Organelos:</strong> Retículo endoplasmático, ribosomas, aparato de Golgi</li>
+                    <li><strong>Mitocondrias:</strong> "Centrales eléctricas" que producen ATP</li>
+                    <li><strong>Vacuolas:</strong> Almacenamiento</li>
+                </ul>
+            </div>
+
+            <div style="text-align: center; margin: 30px 0;">
+                <img src="file:///C:/Users/pblva/OneDrive%20-%20QFplus/PUCE/2025/2025_I/Operaciones_Unitarias/Bioreactor/imagenes/image2.png" alt="Estructura celular procariota" 
+                     style="width: 100%; max-width: 600px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-bottom: 20px;">
+                <p style="font-style: italic; color: #6c757d; margin-bottom: 20px;">
+                    Estructura de una célula procariota típica
+                </p>
+                
+                <img src="file:///C:/Users/pblva/OneDrive%20-%20QFplus/PUCE/2025/2025_I/Operaciones_Unitarias/Bioreactor/imagenes/image3.png" alt="Estructura celular eucariota - Saccharomyces cerevisiae" 
+                     style="width: 100%; max-width: 600px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                <p style="font-style: italic; color: #6c757d; margin-top: 10px;">
+                    Estructura de célula eucariota: Saccharomyces cerevisiae (levadura de panadería)
+                </p>
+            </div>
+        </section>
+
+        <section id="history" class="section">
+            <h2>📜 Historia de la Fermentación</h2>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>🍺 Antes de Cristo - Producción de Cerveza</h3>
+                        <p><strong>Proceso Egipcio Antiguo:</strong></p>
+                        <ol>
+                            <li>Molienda de granos para obtener harina</li>
+                            <li>Preparación de masa y horneado de pan</li>
+                            <li>Fragmentación del pan en agua</li>
+                            <li>Fermentación espontánea</li>
+                            <li>Filtrado de fragmentos de pan</li>
+                            <li>Obtención de líquido fermentado (cerveza)</li>
+                        </ol>
+                        <div class="image-placeholder">
+                            📸 <strong>Imagen:</strong> Cervecería y panadería egipcia antigua
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>🍺 Proceso Moderno de Elaboración de Cerveza</h3>
+                        <div class="process-flow">
+                            <div class="process-step">
+                                <h4>Malteado</h4>
+                                <p>Liberación enzimática de carbohidratos de la cebada</p>
+                            </div>
+                            <div class="process-step">
+                                <h4>Trituración</h4>
+                                <p>Molienda del malta en piezas pequeñas</p>
+                            </div>
+                            <div class="process-step">
+                                <h4>Maceración</h4>
+                                <p>Mezcla con agua y calentamiento para liberar azúcares</p>
+                            </div>
+                            <div class="process-step">
+                                <h4>Cocción</h4>
+                                <p>Adición de lúpulo, ebullición para inactivar enzimas</p>
+                            </div>
+                            <div class="process-step">
+                                <h4>Fermentación</h4>
+                                <p>Adición de levadura, conversión de azúcar a alcohol</p>
+                            </div>
+                            <div class="process-step">
+                                <h4>Almacenamiento</h4>
+                                <p>Desarrollo de sabor y degradación de subproductos</p>
+                            </div>
+                        </div>
+
+                        <div class="formula">
+                            <strong>Reacción Fundamental:</strong><br>
+                            Glucosa + Levadura → Etanol + CO₂
+                            <br><em>(Proceso anaeróbico en tanques sin oxígeno)</em>
+                        </div>
+
+                        <div class="image-placeholder">
+                            📸 <strong>Imagen:</strong> Cervecería DTU moderna - Proceso completo
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>🍶 Edad Media - Producción de Vinagre</h3>
+                        <p><strong>Proceso Natural:</strong> Cuando el vino se deja abierto al aire, se forma una capa mucilaginosa de <em>Acetobacter aceti</em> que convierte el etanol en ácido acético.</p>
+
+                        <div class="formula">
+                            <strong>Reacción:</strong><br>
+                            Vino (Etanol) + Acetobacter aceti + O₂ → Vinagre (Acetato)
+                            <br><em>(Proceso aeróbico - requiere oxígeno)</em>
+                        </div>
+
+                        <h4>Proceso de Orleans (Edad Media)</h4>
+                        <ul>
+                            <li>Barricas con pequeños agujeros para aireación</li>
+                            <li>Embudo que penetra bajo la superficie bacteriana</li>
+                            <li>Mantenimiento de la capa superficial de <em>Acetobacter</em></li>
+                            <li>Adición continua de vino sin disturbar la superficie</li>
+                        </ul>
+
+                        <div class="image-placeholder">
+                            📸 <strong>Imágenes:</strong> Instalación de vinagre de Orleans, proceso en barricas
+                        </div>
+
+                        <h4>Mejoras del Proceso</h4>
+                        <p><strong>Biorreactor de Virutas de Madera:</strong></p>
+                        <ul>
+                            <li>Alta superficie cubierta con <em>Acetobacter aceti</em></li>
+                            <li>Entrada de etanol/vino por aspersión</li>
+                            <li>Recirculación del fluido por bombeo</li>
+                            <li>Entrada de aire en la parte inferior</li>
+                            <li>Proceso optimizado con altas concentraciones de O₂ y etanol</li>
+                        </ul>
+
+                        <div class="image-placeholder">
+                            📸 <strong>Imagen:</strong> Biorreactor moderno para producción de vinagre
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="discoveries" class="section">
+            <h2>🔬 Grandes Descubrimientos Científicos</h2>
+
+            <div class="highlight-box">
+                <h3>1857 - Louis Pasteur y la Teoría de los Gérmenes</h3>
+                <p><strong>Pregunta fundamental:</strong> ¿Cómo se convierte la leche en yogur?</p>
+                <p>Pasteur descubrió que las bacterias forman ácido láctico, estableciendo que los microorganismos catalizan la conversión de materias primas en productos.</p>
+
+                <div class="organism-card">
+                    <h4>Microorganismos del Yogur:</h4>
+                    <ul>
+                        <li><strong>Lactococcus lactis:</strong> Bacterias esféricas (cocoides)</li>
+                        <li><strong>Lactobacillus paracasei:</strong> Bacterias alargadas</li>
+                    </ul>
+                </div>
+
+                <div class="image-placeholder">
+                    📸 <strong>Imagen:</strong> Pasteur en su laboratorio
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>🏭 1914-1925 - Producción Industrial de Acetona y Butanol</h3>
+                    <p><strong>Contexto histórico:</strong> Primera Guerra Mundial - Necesidad de cordita (propelente sin humo) que requiere acetona.</p>
+
+                    <div class="organism-card">
+                        <h4>Chaim Weizmann - Fundador del Estado de Israel</h4>
+                        <p>Aisló <em>Clostridium acetobutylicum</em> que convierte azúcares en acetona bajo condiciones anaeróbicas.</p>
+                        <ul>
+                            <li><strong>Sustrato:</strong> Puré de patata, luego azúcares de maíz/almidón</li>
+                            <li><strong>Productos:</strong> Acetona, butanol, etanol (fermentación ABE)</li>
+                            <li><strong>Aplicación post-guerra:</strong> Butanol como solvente para barnices automotrices</li>
+                            <li><strong>Actualidad:</strong> Resurgimiento para producción de biocombustibles</li>
+                        </ul>
+                    </div>
+
+                    <div class="image-placeholder">
+                        📸 <strong>Imagen:</strong> Sala de fermentación British Acetone Toronto (1917)
+                    </div>
+
+                    <div class="highlight-box">
+                        <p><strong>Productos adicionales desarrollados:</strong></p>
+                        <ul>
+                            <li>Glicerol (Alemania)</li>
+                            <li>Ácido cítrico (Pfizer)</li>
+                            <li>Ácido láctico</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>💊 Descubrimiento de los Antibióticos - Alexander Fleming</h3>
+                    <p><strong>Investigación inicial:</strong> Compuestos capaces de lisar células patógenas (como la lisozima en las lágrimas).</p>
+
+                    <h4>El Descubrimiento Accidental</h4>
+                    <ol>
+                        <li>Cultivo de <em>Staphylococcus aureus</em> en placa de Petri</li>
+                        <li>Contaminación accidental con hongo <em>Penicillium</em></li>
+                        <li>Observación: lisis de colonias bacterianas alrededor del hongo</li>
+                        <li>Identificación del compuesto responsable: penicilina</li>
+                    </ol>
+
+                    <div class="highlight-box">
+                        <p><strong>Premio Nobel 1945:</strong> Alexander Fleming, Ernst Boris Chain y Sir Walter Florey por el descubrimiento de la penicilina y su efecto curativo en enfermedades infecciosas.</p>
+                    </div>
+
+                    <div class="image-placeholder">
+                        📸 <strong>Imagen:</strong> Placa de Petri mostrando el efecto de la penicilina
+                    </div>
+
+                    <h4>Impacto en la Biotecnología</h4>
+                    <p>Este descubrimiento estableció que los microorganismos pueden ser fuentes de compuestos novedosos beneficiosos, impulsando la búsqueda sistemática de nuevos antibióticos, vitaminas, aminoácidos y enzimas.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>📊 Producción Industrial Actual (datos 2010)</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>Ejemplos</th>
+                            <th>Producción Anual</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Químicos a granel</td>
+                            <td>Ácido cítrico, ácido láctico, glutamato, lisina</td>
+                            <td>800,000 - 1,500,000 toneladas</td>
+                        </tr>
+                        <tr>
+                            <td>Vitaminas</td>
+                            <td>Vitamina C</td>
+                            <td>30,000 toneladas</td>
+                        </tr>
+                        <tr>
+                            <td>Enzimas</td>
+                            <td>Detergentes, productos de panadería</td>
+                            <td>10,000 - 300,000 toneladas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="modern" class="section">
+            <h2>🧬 Biotecnología Moderna</h2>
+
+            <div class="highlight-box">
+                <h3>Prerequisitos para el Desarrollo</h3>
+                <ul>
+                    <li>Descubrimiento del DNA como portador de información genética</li>
+                    <li>Desarrollo de herramientas de biología molecular (PCR)</li>
+                    <li>Capacidad de producir proteínas y péptidos en huéspedes heterólogos</li>
+                </ul>
+            </div>
+
+            <h3>🧪 Producción de Proteínas Recombinantes</h3>
+            <div class="process-flow">
+                <div class="process-step">
+                    <h4>1. Extracción</h4>
+                    <p>Extracción del DNA que codifica el gen de interés</p>
+                </div>
+                <div class="process-step">
+                    <h4>2. Amplificación</h4>
+                    <p>PCR para obtener múltiples copias del gen</p>
+                </div>
+                <div class="process-step">
+                    <h4>3. Clonación</h4>
+                    <p>Inserción del gen en plásmido linearizado</p>
+                </div>
+                <div class="process-step">
+                    <h4>4. Transformación</h4>
+                    <p>Introducción del plásmido en bacteria huésped</p>
+                </div>
+                <div class="process-step">
+                    <h4>5. Cultivo</h4>
+                    <p>Crecimiento en biorreactor para producción</p>
+                </div>
+                <div class="process-step">
+                    <h4>6. Separación</h4>
+                    <p>Purificación del producto (ej: insulina)</p>
+                </div>
+            </div>
+
+            <div class="image-placeholder">
+                📸 <strong>Imagen:</strong> Esquema del proceso de clonación molecular
+            </div>
+
+            <h3>⚙️ Ingeniería Metabólica</h3>
+            <p><strong>Definición:</strong> Optimización de procesos genéticos y reguladores dentro de las células para aumentar la producción del compuesto de interés.</p>
+
+            <div class="organism-card">
+                <h4>Proceso de Ingeniería Metabólica:</h4>
+                <ol>
+                    <li><strong>Análisis de vías metabólicas:</strong> Entender cómo el organismo convierte sustrato en producto</li>
+                    <li><strong>Identificación de targets moleculares:</strong> Puntos clave para mejora</li>
+                    <li><strong>Modificación genética:</strong> Sobreexpresión de enzimas clave</li>
+                    <li><strong>Optimización:</strong> Mejora del huésped de producción</li>
+                </ol>
+            </div>
+
+            <div class="image-placeholder">
+                📸 <strong>Imagen:</strong> Red metabólica compleja mostrando múltiples reacciones celulares
+            </div>
+
+            <h3>⛽ Producción de Biocombustibles (1990-presente)</h3>
+            <p>El proceso es similar a la producción de cerveza pero a escala industrial masiva.</p>
+
+            <div class="highlight-box">
+                <h4>Ejemplo: Planta de Bioetanol en Zeitz, Alemania</h4>
+                <p><strong>Capacidad:</strong> 400,000 m³ de bioetanol por año</p>
+            </div>
+
+            <div class="process-flow">
+                <div class="process-step">
+                    <h4>Recepción</h4>
+                    <p>Descarga de granos de fuentes locales</p>
+                </div>
+                <div class="process-step">
+                    <h4>Molienda</h4>
+                    <p>Trituración para obtener harina</p>
+                </div>
+                <div class="process-step">
+                    <h4>Maceración</h4>
+                    <p>Mezcla con agua y enzimas para sacarificación</p>
+                </div>
+                <div class="process-step">
+                    <h4>Fermentación</h4>
+                    <p>Conversión de azúcares a etanol por levaduras</p>
+                </div>
+                <div class="process-step">
+                    <h4>Destilación</h4>
+                    <p>Concentración y purificación del etanol</p>
+                </div>
+                <div class="process-step">
+                    <h4>Deshidratación</h4>
+                    <p>Eliminación final de agua</p>
+                </div>
+            </div>
+
+            <div class="image-placeholder">
+                📸 <strong>Imagen:</strong> Planta industrial de bioetanol
+            </div>
+
+            <h3>🏭 Estructura General de un Bioproceso</h3>
+            <div class="organism-card">
+                <h4>Tres etapas principales:</h4>
+                <ul>
+                    <li><strong>Procesamiento Inicial (Upstream):</strong> Trituración, solubilización, eliminación de tóxicos</li>
+                    <li><strong>Biotransformación:</strong> Fermentación propiamente dicha</li>
+                    <li><strong>Procesamiento Final (Downstream):</strong> Separación, extracción, purificación</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🤔 Consideraciones para el Diseño de Procesos</h3>
+                <ul>
+                    <li>¿Qué organismos pueden realizar mi proceso de interés?</li>
+                    <li>¿Dónde puedo encontrar este organismo?</li>
+                    <li>¿Qué requisitos técnicos necesito?</li>
+                    <li>¿Cómo mejoro el proceso de fermentación?</li>
+                    <li>¿Qué vías metabólicas existen?</li>
+                    <li>¿Cuáles son los productos principales y subproductos?</li>
+                    <li>¿Cómo optimizar para mejores rendimientos y productividad?</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="challenges" class="section challenge-section">
+            <h2>🎯 Retos y Actividades de Aprendizaje</h2>
+            <p>Pon a prueba tus conocimientos con estos desafíos basados en casos reales de biotecnología industrial.</p>
+
+            <div class="challenge-card">
+                <span class="level level-beginner">Nivel Principiante</span>
+                <h4>🍺 Reto 1: Diagnóstico de Proceso Cervecero</h4>
+                <p><strong>Situación:</strong> Una cervecería reporta que su producto final tiene sabor agrio y un aroma extraño.</p>
+                <p><strong>Tu misión:</strong></p>
+                <ul>
+                    <li>Identifica las posibles causas del problema</li>
+                    <li>Explica qué microorganismos podrían estar involucrados</li>
+                    <li>Propón 3 medidas preventivas para evitar esta contaminación</li>
+                    <li>Diseña un protocolo de control de calidad microbiológico</li>
+                </ul>
+            </div>
+
+            <div class="challenge-card">
+                <span class="level level-beginner">Nivel Principiante</span>
+                <h4>🍶 Reto 2: Optimización de Producción de Vinagre</h4>
+                <p><strong>Situación:</strong> Tienes que diseñar un proceso de vinagre más eficiente que el método de Orleans.</p>
+                <p><strong>Tu misión:</strong></p>
+                <ul>
+                    <li>Calcula la relación superficie/volumen óptima para maximizar la transferencia de oxígeno</li>
+                    <li>Diseña un sistema de aireación eficiente</li>
+                    <li>Propón un método para mantener la temperatura óptima (30-35°C)</li>
+                    <li>Estima el tiempo de conversión de 1000L de vino a vinagre</li>
+                </ul>
+            </div>
+
+            <div class="challenge-card">
+                <span class="level level-intermediate">Nivel Intermedio</span>
+                <h4>🧬 Reto 3: Ingeniería Metabólica para Biocombustibles</h4>
+                <p><strong>Situación:</strong> Una empresa quiere mejorar la producción de etanol de <em>Saccharomyces cerevisiae</em> para aumentar el rendimiento de 0.45 g etanol/g glucosa a 0.51 g etanol/g glucosa (rendimiento teórico máximo).</p>
+                <p><strong>Tu misión:</strong></p>
+                <ul>
+                    <li>Identifica las vías metabólicas que compiten con la producción de etanol</li>
+                    <li>Propón qué genes sobreexpresar y cuáles silenciar</li>
+                    <li>Diseña una estrategia de cultivo en dos fases (crecimiento + producción)</li>
+                    <li>Calcula el impacto económico de la mejora en una planta de 400,000 m³/año</li>
+                </ul>
+            </div>
+
+            <div class="challenge-card">
+                <span class="level level-intermediate">Nivel Intermedio</span>
+                <h4>💊 Reto 4: Escalado de Producción de Antibióticos</h4>
+                <p><strong>Situación:</strong> Has descubierto un nuevo hongo que produce un antibiótico prometente. En matraz produces 50 mg/L, pero necesitas llegar a producción industrial.</p>
+                <p><strong>Tu misión:</strong></p>
+                <ul>
+                    <li>Diseña la secuencia de escalado desde 100 mL hasta 10,000 L</li>
+                    <li>Identifica los parámetros críticos a mantener constantes</li>
+                    <li>Propón una estrategia de optimización de medios de cultivo</li>
+                    <li>Calcula la purificación downstream necesaria para obtener API farmacéutico</li>
+                </ul>
+            </div>
+
+            <div class="challenge-card">
+                <span class="level level-advanced">Nivel Avanzado</span>
+                <h4>🏭 Reto 5: Diseño de Biorrefinería Integrada</h4>
+                <p><strong>Situación:</strong> Diseña una biorrefinería que procese 100,000 ton/año de residuos agrícolas para producir múltiples productos de valor agregado.</p>
+                <p><strong>Tu misión:</strong></p>
+                <ul>
+                    <li>Selecciona la combinación óptima de productos (etanol, ácido láctico, proteína unicelular)</li>
+                    <li>Diseña el tren de preprocesamiento (hidrólisis, detoxificación)</li>
+                    <li>Optimiza la secuencia de fermentaciones y separaciones</li>
+                    <li>Realiza análisis económico y de sostenibilidad (LCA)</li>
+                    <li>Propón innovaciones en ingeniería metabólica para mejorar rendimientos</li>
+                </ul>
+            </div>
+
+            <div class="challenge-card">
+                <span class="level level-advanced">Nivel Avanzado</span>
+                <h4>🌍 Reto 6: Proyecto de Consultoría Biotecnológica</h4>
+                <p><strong>Situación:</strong> Una startup quiere producir proteínas de algas unicelulares como sustituto de carne. Te contratan como consultor.</p>
+                <p><strong>Tu misión:</strong></p>
+                <ul>
+                    <li>Analiza la viabilidad técnica y económica del proyecto</li>
+                    <li>Identifica las especies de algas más prometedoras</li>
+                    <li>Diseña el proceso completo: cultivo, cosecha, procesamiento</li>
+                    <li>Propón estrategias de modificación genética para mejorar el perfil proteico</li>
+                    <li>Desarrolla plan de escalado y análisis de riesgos</li>
+                    <li>Presenta propuesta de inversión con retorno económico proyectado</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>📝 Instrucciones para los Retos</h3>
+                <ul>
+                    <li><strong>Formato de entrega:</strong> Reporte técnico de 3-5 páginas por reto</li>
+                    <li><strong>Incluir:</strong> Fundamentos teóricos, cálculos, diagramas de proceso, análisis económico básico</li>
+                    <li><strong>Fuentes:</strong> Mínimo 5 referencias científicas por reto</li>
+                    <li><strong>Presentación:</strong> Presentación oral de 10 minutos para retos nivel avanzado</li>
+                    <li><strong>Evaluación:</strong> Creatividad, rigor científico, viabilidad técnica y claridad de comunicación</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎯 Objetivos de Aprendizaje</h3>
+                <p>Al completar estos retos, serás capaz de:</p>
+                <ul>
+                    <li>Aplicar principios microbiológicos a problemas industriales reales</li>
+                    <li>Diseñar procesos biotecnológicos desde escala laboratorio hasta industrial</li>
+                    <li>Integrar conocimientos de biología molecular, ingeniería de procesos y economía</li>
+                    <li>Desarrollar pensamiento crítico para optimización de bioprocesos</li>
+                    <li>Comunicar efectivamente soluciones técnicas complejas</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer style="text-align: center; margin-top: 50px; padding: 20px; background: #2c3e50; color: white; border-radius: 10px;">
+            <p><em>Fundamentos de Biotecnología Industrial - Curso de Bioingeniería</em></p>
+            <p>Material educativo basado en las conferencias del Prof. Gerd Seibold</p>
+        </footer>
+    </div>
+
+    <script>
+        // Smooth scrolling para navegación
+        document.querySelectorAll('.nav-menu a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Animación de entrada para las tarjetas
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.section, .challenge-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Contador de progreso de lectura
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            if (!document.querySelector('.progress-bar')) {
+                const progressBar = document.createElement('div');
+                progressBar.className = 'progress-bar';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: ${scrolled}%;
+                    height: 4px;
+                    background: linear-gradient(90deg, #3498db, #2ecc71);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            } else {
+                document.querySelector('.progress-bar').style.width = scrolled + '%';
+            }
+        });
+    </script>
+</body>
+</html>

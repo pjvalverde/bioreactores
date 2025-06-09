@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fundamentos de Biotecnología Industrial - Bioreactores</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            background: #34495e;
+            padding: 15px 0;
+            margin: 20px 0;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-menu a:hover {
+            background: #2c3e50;
+            transform: translateY(-2px);
+        }
+
+        .section {
+            margin: 40px 0;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #3498db;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #34495e;
+            margin: 25px 0 15px 0;
+            font-size: 1.4em;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+        }
+
+        .organism-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .organism-card:hover {
+            border-color: #3498db;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .organism-card h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .organism-card ul {
+            margin-left: 20px;
+        }
+
+        .organism-card li {
+            margin-bottom: 8px;
+        }
+
+        .process-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .process-step {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .process-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .process-step h4 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .image-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .image-container img {
+            width: 100%;
+            max-width: 700px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+        }
+
+        .image-caption {
+            font-style: italic;
+            color: #6c757d;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .microorganism-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .microorganism-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .microorganism-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .microorganism-card img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .microorganism-card h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .microorganism-card p {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            background: #2c3e50;
+            color: white;
+            border-radius: 10px;
+            margin-top: 50px;
+        }
+
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .nav-menu a {
+                display: block;
+                margin: 5px 0;
+            }
+
+            .process-flow {
+                grid-template-columns: 1fr;
+            }
+
+            .microorganism-images {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧬 Fundamentos de Biotecnología Industrial</h1>
+            <p class="subtitle">Microorganismos y Bioreactores</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Curso de Bioingeniería - Material Educativo</p>
+        </header>
+
+        <nav class="nav-menu">
+            <a href="#microorganisms">Microorganismos</a>
+            <a href="#applications">Aplicaciones</a>
+            <a href="#types">Tipos Celulares</a>
+            <a href="#structures">Estructuras</a>
+        </nav>
+
+        <section id="microorganisms" class="section">
+            <h2>🦠 Introducción a los Microorganismos</h2>
+            
+            <div class="highlight-box">
+                <h3>¿Qué son los microorganismos?</h3>
+                <p>Los microorganismos son organismos microscópicos que pueden ser observados únicamente a través de un microscopio. Su tamaño típico es de aproximadamente <strong>0.5 micrómetros</strong> de diámetro, 100 veces más pequeños que un cabello humano (50 micrómetros).</p>
+            </div>
+
+            <section id="applications" class="highlight-box">
+                <h3>🔬 Aplicaciones en Biotecnología Industrial</h3>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <h4>🧫 Producción de Células</h4>
+                        <p>Levaduras para la industria panadera y cervecera</p>
+                    </div>
+                    <div class="process-step">
+                        <h4>🧪 Productos Celulares</h4>
+                        <p>Enzimas, alcohol, proteínas terapéuticas, aditivos alimentarios</p>
+                    </div>
+                    <div class="process-step">
+                        <h4>♻️ Bioconversiones</h4>
+                        <p>Transformación de sustratos en productos, detoxificación ambiental</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="types">
+                <h3>📊 Comparación de Tamaños</h3>
+                <div class="microorganism-images">
+                    <div class="microorganism-card">
+                        <img src="./imagenes/image_01.png" alt="Comparación de tamaños - Escala microorganismos">
+                        <h4>Escala de Comparación</h4>
+                        <p>Visualización de las diferencias de tamaño entre estudiantes (1.5-2m), cabello humano (50 μm) y bacterias (0.5 μm)</p>
+                    </div>
+                    
+                    <div class="microorganism-card">
+                        <img src="./imagenes/image_02.png" alt="Estructura celular procariota">
+                        <h4>Célula Procariota</h4>
+                        <p>Estructura típica de una bacteria con pared celular, membrana, citoplasma, nucleoide y organelos básicos</p>
+                    </div>
+                    
+                    <div class="microorganism-card">
+                        <img src="./imagenes/image_03.png" alt="Estructura celular eucariota">
+                        <h4>Célula Eucariota</h4>
+                        <p>Saccharomyces cerevisiae (levadura) mostrando núcleo, mitocondrias, retículo endoplasmático y vacuolas</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <section id="structures" class="section">
+            <h2>🔬 Tipos de Microorganismos</h2>
+
+            <div class="organism-card">
+                <h4>🦠 Células Procariotas (Bacterias y Arqueas)</h4>
+                <ul>
+                    <li><strong>Estructura:</strong> Pared celular, membrana citoplasmática, citoplasma</li>
+                    <li><strong>Material genético:</strong> Nucleoide (cromosoma circular) y plásmidos</li>
+                    <li><strong>Organelos:</strong> Ribosomas 70S, vesículas de almacenamiento</li>
+                    <li><strong>Estructuras externas:</strong> Pili (adhesión), flagelos (movimiento)</li>
+                    <li><strong>Tamaño:</strong> Típicamente 0.5-5 μm</li>
+                </ul>
+            </div>
+
+            <div class="organism-card">
+                <h4>🍄 Células Eucariotas (Levaduras, Hongos, Protozoos, Algas)</h4>
+                <p><em>Ejemplo principal: Saccharomyces cerevisiae (levadura de panadería)</em></p>
+                <ul>
+                    <li><strong>Núcleo:</strong> DNA rodeado por membrana nuclear con poros</li>
+                    <li><strong>Organelos:</strong> Retículo endoplasmático, ribosomas 80S, aparato de Golgi</li>
+                    <li><strong>Mitocondrias:</strong> "Centrales eléctricas" que producen ATP</li>
+                    <li><strong>Vacuolas:</strong> Almacenamiento de agua y nutrientes</li>
+                    <li><strong>Tamaño:</strong> Típicamente 5-50 μm</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎯 Importancia en Bioreactores</h3>
+                <p>La comprensión de estas estructuras celulares es fundamental para:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Diseñar condiciones óptimas de cultivo</li>
+                    <li>Seleccionar el tipo de bioreactor apropiado</li>
+                    <li>Optimizar la producción de metabolitos</li>
+                    <li>Controlar parámetros críticos (pH, temperatura, oxígeno)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>📚 Próximas Secciones</h2>
+            <div class="process-flow">
+                <div class="process-step">
+                    <h4>🏺 Historia de la Fermentación</h4>
+                    <p>Desde las civilizaciones antiguas hasta la biotecnología moderna</p>
+                </div>
+                <div class="process-step">
+                    <h4>🔬 Descubrimientos Clave</h4>
+                    <p>Pasteur, Koch, Fleming y otros pioneros</p>
+                </div>
+                <div class="process-step">
+                    <h4>⚗️ Bioreactores Modernos</h4>
+                    <p>Tecnologías actuales y aplicaciones industriales</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>🧬 <strong>Fundamentos de Biotecnología Industrial</strong></p>
+            <p>Material educativo para estudiantes de Bioingeniería</p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/pjvalverde/bioreactores" target="_blank">
+                    📁 Repositorio en GitHub
+                </a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Smooth scrolling para navegación
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animación de carga
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.section').forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    section.style.transition = 'all 0.6s ease';
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>
