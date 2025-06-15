@@ -756,7 +756,7 @@
         function animateProcess(processType) {
             if (!processAnimations[processType]) return;
 
-            processTime += 0.02; // Reducido de 0.05 a 0.02 (mas lento)
+            processTime += 0.01; // Aun mas lento para mejor comprension
             drawProcessSimulations(processType);
             
             processAnimationId = requestAnimationFrame(function() {
@@ -1226,190 +1226,226 @@
             }
         }
 
-        // Funciones de dibujo para otros procesos
+        // Funciones de dibujo para otros procesos - MAS LENTAS Y CLARAS
         function drawDistillationProcess(ctx, canvas) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Fase liquida (inferior)
-            ctx.fillStyle = 'rgba(52, 152, 219, 0.3)';
+            // Fase liquida (inferior) - color mas definido
+            ctx.fillStyle = 'rgba(52, 152, 219, 0.4)';
             ctx.fillRect(0, canvas.height * 0.6, canvas.width, canvas.height * 0.4);
             
-            // Fase vapor (superior)
-            ctx.fillStyle = 'rgba(231, 76, 60, 0.2)';
+            // Fase vapor (superior) - color mas definido
+            ctx.fillStyle = 'rgba(231, 76, 60, 0.3)';
             ctx.fillRect(0, 0, canvas.width, canvas.height * 0.6);
             
-            // Interfase ondulada (mas lenta)
-            ctx.strokeStyle = '#34495e';
-            ctx.lineWidth = 2;
-            ctx.setLineDash([10, 5]);
+            // Interfase mas visible y mas lenta
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([15, 8]);
             ctx.beginPath();
-            for (let x = 0; x <= canvas.width; x += 10) {
-                const y = canvas.height * 0.6 + Math.sin(x * 0.02 + processTime * 1.5) * 3; // Reducido de 3 a 1.5
+            for (let x = 0; x <= canvas.width; x += 15) {
+                const y = canvas.height * 0.6 + Math.sin(x * 0.02 + processTime * 0.8) * 2; // Mucho mas lento
                 if (x === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }
             ctx.stroke();
             ctx.setLineDash([]);
             
-            // Moleculas de etanol (rojas, hacia arriba) - MAS LENTA
-            for (let i = 0; i < 15; i++) {
-                const baseX = (i * canvas.width) / 15;
-                const x = baseX + Math.sin(processTime * 0.8 + i) * 15; // Reducido multiplicador y amplitud
-                const y = canvas.height * 0.7 + Math.random() * canvas.height * 0.2 - Math.sin(processTime * 1.2 + i) * 20; // Mas lento
+            // Moleculas de etanol (rojas, hacia arriba) - MUCHO MAS LENTAS
+            for (let i = 0; i < 10; i++) { // Menos moleculas para claridad
+                const baseX = 50 + (i * (canvas.width - 100)) / 9;
+                const x = baseX + Math.sin(processTime * 0.4 + i) * 8; // Mucho mas lento
+                const y = canvas.height * 0.75 - Math.sin(processTime * 0.6 + i) * 15; // Movimiento mas lento y predecible
                 
                 if (y > canvas.height * 0.6) {
                     ctx.beginPath();
-                    ctx.arc(x, y, 4, 0, Math.PI * 2);
+                    ctx.arc(x, y, 6, 0, Math.PI * 2); // Mas grandes para ver mejor
                     ctx.fillStyle = '#e74c3c';
-                    ctx.shadowColor = 'rgba(231, 76, 60, 0.5)';
-                    ctx.shadowBlur = 8;
                     ctx.fill();
-                    ctx.shadowBlur = 0;
+                    ctx.strokeStyle = '#c0392b';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
                     
-                    // Flecha hacia arriba (animada mas lenta)
-                    drawAnimatedArrow(ctx, x, y - 10, x, y - 30, '#e74c3c', processTime * 0.5 + i);
+                    // Etiqueta clara
+                    ctx.fillStyle = '#2c3e50';
+                    ctx.font = 'bold 10px Arial';
+                    ctx.fillText('EtOH', x - 12, y + 3);
+                    
+                    // Flecha hacia arriba mas lenta
+                    if (processTime % 6 < 3) { // Aparece intermitentemente
+                        drawAnimatedArrow(ctx, x, y - 15, x, y - 35, '#e74c3c', processTime * 0.2 + i);
+                    }
                 }
             }
             
-            // Moleculas de agua (azules, hacia abajo) - MAS LENTA
-            for (let i = 0; i < 10; i++) {
-                const baseX = (i * canvas.width) / 10;
-                const x = baseX + Math.cos(processTime * 0.6 + i) * 12; // Mas lento y menor amplitud
-                const y = canvas.height * 0.2 + Math.random() * canvas.height * 0.3 + Math.cos(processTime * 0.8 + i) * 15; // Mas lento
+            // Moleculas de agua (azules, hacia abajo) - MUCHO MAS LENTAS
+            for (let i = 0; i < 8; i++) { // Menos moleculas
+                const baseX = 60 + (i * (canvas.width - 120)) / 7;
+                const x = baseX + Math.cos(processTime * 0.3 + i) * 6; // Mas lento
+                const y = canvas.height * 0.35 + Math.cos(processTime * 0.4 + i) * 12; // Mas lento
                 
                 if (y < canvas.height * 0.6) {
                     ctx.beginPath();
-                    ctx.arc(x, y, 4, 0, Math.PI * 2);
+                    ctx.arc(x, y, 6, 0, Math.PI * 2); // Mas grandes
                     ctx.fillStyle = '#3498db';
-                    ctx.shadowColor = 'rgba(52, 152, 219, 0.5)';
-                    ctx.shadowBlur = 8;
                     ctx.fill();
-                    ctx.shadowBlur = 0;
+                    ctx.strokeStyle = '#2980b9';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
                     
-                    // Flecha hacia abajo (animada mas lenta)
-                    drawAnimatedArrow(ctx, x, y + 10, x, y + 30, '#3498db', processTime * 0.5 + i);
+                    // Etiqueta clara
+                    ctx.fillStyle = '#2c3e50';
+                    ctx.font = 'bold 10px Arial';
+                    ctx.fillText('H₂O', x - 12, y + 3);
+                    
+                    // Flecha hacia abajo mas lenta
+                    if (processTime % 6 > 3) { // Alterna con etanol
+                        drawAnimatedArrow(ctx, x, y + 15, x, y + 35, '#3498db', processTime * 0.2 + i);
+                    }
                 }
             }
             
-            // Burbujas de vapor subiendo (mas lentas)
-            for (let i = 0; i < 8; i++) {
-                const x = (i * canvas.width) / 8 + Math.sin(processTime * 0.4 + i * 0.5) * 8; // Mas lento
-                const y = canvas.height * 0.8 - (processTime * 30 + i * 30) % (canvas.height * 0.6); // Mas lento
+            // Burbujas de vapor subiendo mas lentas
+            for (let i = 0; i < 5; i++) { // Menos burbujas
+                const x = 80 + (i * (canvas.width - 160)) / 4 + Math.sin(processTime * 0.2 + i) * 5;
+                const y = canvas.height * 0.85 - (processTime * 15 + i * 40) % (canvas.height * 0.7); // Mucho mas lento
                 
                 ctx.beginPath();
-                ctx.arc(x, y, 3 + Math.sin(processTime * 0.6 + i) * 2, 0, Math.PI * 2); // Mas lento
-                ctx.fillStyle = 'rgba(231, 76, 60, 0.6)';
+                ctx.arc(x, y, 4 + Math.sin(processTime * 0.3 + i) * 1, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(231, 76, 60, 0.7)';
                 ctx.fill();
+                ctx.strokeStyle = 'rgba(192, 57, 43, 0.8)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
             }
             
-            // Etiquetas
+            // Etiquetas mas claras
             ctx.fillStyle = '#2c3e50';
-            ctx.font = 'bold 14px Arial';
-            ctx.fillText('Fase Vapor (Etanol enriquecido)', 10, 25);
-            ctx.fillText('Fase Liquida (Agua enriquecida)', 10, canvas.height - 10);
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('Fase Vapor', 10, 25);
+            ctx.fillText('(Etanol concentrado)', 10, 45);
             
-            // Temperatura
+            ctx.fillText('Fase Liquida', 10, canvas.height - 35);
+            ctx.fillText('(Agua concentrada)', 10, canvas.height - 15);
+            
+            // Temperatura mas visible
             ctx.fillStyle = '#e74c3c';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('T = 78°C', canvas.width - 100, 25);
             ctx.font = '12px Arial';
-            ctx.fillText('T = 78°C (Punto ebullicion etanol)', 10, 45);
+            ctx.fillText('Punto ebullicion', canvas.width - 120, 45);
+            ctx.fillText('del etanol', canvas.width - 100, 60);
         }
 
         function drawExtractionProcess(ctx, canvas) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Fase acuosa (izquierda)
-            ctx.fillStyle = 'rgba(52, 152, 219, 0.3)';
+            // Fase acuosa (izquierda) - color mas definido
+            ctx.fillStyle = 'rgba(52, 152, 219, 0.4)';
             ctx.fillRect(0, 0, canvas.width * 0.5, canvas.height);
             
-            // Fase organica (derecha)
-            ctx.fillStyle = 'rgba(46, 204, 113, 0.3)';
+            // Fase organica (derecha) - color mas definido
+            ctx.fillStyle = 'rgba(46, 204, 113, 0.4)';
             ctx.fillRect(canvas.width * 0.5, 0, canvas.width * 0.5, canvas.height);
             
-            // Interfase vertical ondulada (mas lenta)
-            ctx.strokeStyle = '#34495e';
-            ctx.lineWidth = 3;
+            // Interfase vertical mas visible y mucho mas lenta
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 4;
             ctx.beginPath();
-            for (let y = 0; y <= canvas.height; y += 10) {
-                const x = canvas.width * 0.5 + Math.sin(y * 0.02 + processTime * 0.5) * 3; // Mucho mas lento
+            for (let y = 0; y <= canvas.height; y += 15) {
+                const x = canvas.width * 0.5 + Math.sin(y * 0.02 + processTime * 0.3) * 2; // Mucho mas lento
                 if (y === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }
             ctx.stroke();
             
-            // Proteinas moviendose hacia la derecha - MUCHO MAS LENTA
-            for (let i = 0; i < 12; i++) {
-                const progress = (processTime * 0.08 + i * 0.1) % 1; // Mucho mas lento (era 0.2)
-                const x = progress * canvas.width * 0.8;
-                const y = (i * canvas.height) / 12 + Math.sin(processTime * 0.2 + i) * 6; // Mas lento
+            // Proteinas moviendose - EXTREMADAMENTE LENTA
+            for (let i = 0; i < 8; i++) { // Menos proteinas para claridad
+                const progress = (processTime * 0.04 + i * 0.15) % 1; // Extremadamente lento
+                const x = 30 + progress * (canvas.width - 60);
+                const y = 50 + (i * (canvas.height - 100)) / 7 + Math.sin(processTime * 0.1 + i) * 3; // Muy lento
                 
                 ctx.beginPath();
-                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.arc(x, y, 8, 0, Math.PI * 2); // Mas grandes
                 
-                // Cambiar color segun la fase
-                if (x < canvas.width * 0.5) {
+                // Cambiar color segun la fase con transicion
+                if (x < canvas.width * 0.4) {
                     ctx.fillStyle = '#9b59b6'; // En fase acuosa
+                    ctx.strokeStyle = '#8e44ad';
+                } else if (x > canvas.width * 0.6) {
+                    ctx.fillStyle = '#27ae60'; // En fase organica
+                    ctx.strokeStyle = '#229954';
                 } else {
-                    ctx.fillStyle = '#8e44ad'; // En fase organica
+                    ctx.fillStyle = '#f39c12'; // En transicion
+                    ctx.strokeStyle = '#e67e22';
                 }
                 
-                ctx.shadowColor = 'rgba(155, 89, 182, 0.5)';
-                ctx.shadowBlur = 6;
                 ctx.fill();
-                ctx.shadowBlur = 0;
+                ctx.lineWidth = 2;
+                ctx.stroke();
                 
-                // Flecha de movimiento (mucho mas lenta)
-                if (x < canvas.width * 0.9 && x > 20) {
-                    drawAnimatedArrow(ctx, x + 12, y, x + 25, y, '#9b59b6', processTime * 0.15 + i);
+                // Etiqueta
+                ctx.fillStyle = '#2c3e50';
+                ctx.font = 'bold 8px Arial';
+                ctx.fillText('P', x - 3, y + 2);
+                
+                // Flecha de movimiento muy lenta
+                if (x < canvas.width * 0.85 && progress > 0.1) {
+                    drawAnimatedArrow(ctx, x + 12, y, x + 25, y, '#7f8c8d', processTime * 0.1 + i);
                 }
             }
             
-            // Gotas de extraccion en la interfase (mas lentas)
-            for (let i = 0; i < 6; i++) {
-                const y = (i * canvas.height) / 6;
-                const x = canvas.width * 0.5 + Math.sin(processTime * 0.8 + i) * 4; // Mas lento y menor amplitud
+            // Gotas de extraccion en la interfase mas lentas
+            for (let i = 0; i < 4; i++) { // Menos gotas
+                const y = 80 + (i * (canvas.height - 160)) / 3;
+                const x = canvas.width * 0.5 + Math.sin(processTime * 0.4 + i) * 3; // Mas lento
                 
                 ctx.beginPath();
-                ctx.arc(x, y, 2 + Math.sin(processTime * 0.5 + i), 0, Math.PI * 2); // Mas lento
+                ctx.arc(x, y, 3 + Math.sin(processTime * 0.2 + i), 0, Math.PI * 2);
                 ctx.fillStyle = '#f39c12';
                 ctx.fill();
             }
             
-            // Etiquetas
+            // Etiquetas mas claras
             ctx.fillStyle = '#2c3e50';
-            ctx.font = 'bold 14px Arial';
+            ctx.font = 'bold 16px Arial';
             ctx.fillText('Fase Acuosa', 10, 25);
             ctx.fillText('Fase Organica', canvas.width * 0.5 + 10, 25);
-            ctx.fillText('(Proteinas)', 10, 45);
-            ctx.fillText('(Extracto)', canvas.width * 0.5 + 10, 45);
+            
+            ctx.font = '14px Arial';
+            ctx.fillStyle = '#9b59b6';
+            ctx.fillText('Proteinas solubles', 10, 45);
+            ctx.fillStyle = '#27ae60';
+            ctx.fillText('Extracto purificado', canvas.width * 0.5 + 10, 45);
             
             // Eficiencia
-            ctx.fillStyle = '#27ae60';
-            ctx.font = '12px Arial';
-            ctx.fillText('Eficiencia: 85%', 10, canvas.height - 10);
+            ctx.fillStyle = '#e67e22';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('Eficiencia: 85%', 10, canvas.height - 15);
         }
 
         function drawCrystallizationProcess(ctx, canvas) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Solucion sobresaturada con gradiente
+            // Solucion sobresaturada con gradiente mas visible
             const gradient = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, canvas.width/2);
-            gradient.addColorStop(0, 'rgba(155, 89, 182, 0.4)');
-            gradient.addColorStop(1, 'rgba(155, 89, 182, 0.1)');
+            gradient.addColorStop(0, 'rgba(155, 89, 182, 0.5)');
+            gradient.addColorStop(1, 'rgba(155, 89, 182, 0.2)');
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Cristales creciendo (mas lento)
+            // Cristales creciendo MUY LENTAMENTE
             const crystals = [
-                {x: canvas.width * 0.2, y: canvas.height * 0.3, size: 15 + Math.sin(processTime * 0.5) * 3}, // Mas lento
-                {x: canvas.width * 0.6, y: canvas.height * 0.7, size: 20 + Math.cos(processTime * 0.6) * 4}, // Mas lento
-                {x: canvas.width * 0.8, y: canvas.height * 0.4, size: 12 + Math.sin(processTime * 0.4) * 2} // Mas lento
+                {x: canvas.width * 0.25, y: canvas.height * 0.35, size: 20 + Math.sin(processTime * 0.2) * 2}, // Mucho mas lento
+                {x: canvas.width * 0.65, y: canvas.height * 0.65, size: 25 + Math.cos(processTime * 0.15) * 3}, // Mucho mas lento
+                {x: canvas.width * 0.75, y: canvas.height * 0.25, size: 15 + Math.sin(processTime * 0.18) * 1.5} // Mucho mas lento
             ];
             
             crystals.forEach(function(crystal, crystalIndex) {
-                // Dibujar cristal hexagonal con crecimiento (mas lento)
+                // Dibujar cristal hexagonal con crecimiento muy lento
                 ctx.beginPath();
                 for (let i = 0; i < 6; i++) {
-                    const angle = (i * Math.PI) / 3 + processTime * 0.05; // Mucho mas lento
+                    const angle = (i * Math.PI) / 3 + processTime * 0.02; // Extremadamente lento
                     const pointX = crystal.x + crystal.size * Math.cos(angle);
                     const pointY = crystal.y + crystal.size * Math.sin(angle);
                     
@@ -1420,68 +1456,94 @@
                 ctx.fillStyle = '#2c3e50';
                 ctx.fill();
                 ctx.strokeStyle = '#34495e';
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 3;
                 ctx.stroke();
                 
-                // Particulas depositandose - MAS LENTA
-                for (let i = 0; i < 8; i++) {
-                    const angle = (i / 8) * Math.PI * 2 + processTime * 0.5; // Mas lento
-                    const distance = crystal.size + 30 + Math.sin(processTime * 0.4 + i) * 15; // Mas lento
+                // Etiqueta del cristal
+                ctx.fillStyle = '#2c3e50';
+                ctx.font = 'bold 10px Arial';
+                ctx.fillText('C' + (crystalIndex + 1), crystal.x - 8, crystal.y + 3);
+                
+                // Particulas depositandose - MUY LENTA
+                for (let i = 0; i < 6; i++) { // Menos particulas
+                    const angle = (i / 6) * Math.PI * 2 + processTime * 0.2; // Mas lento
+                    const distance = crystal.size + 40 + Math.sin(processTime * 0.15 + i) * 8; // Mas lento
                     const x = crystal.x + Math.cos(angle) * distance;
                     const y = crystal.y + Math.sin(angle) * distance;
                     
-                    if (x > 0 && x < canvas.width && y > 0 && y < canvas.height) {
+                    if (x > 20 && x < canvas.width - 20 && y > 20 && y < canvas.height - 20) {
                         ctx.beginPath();
-                        ctx.arc(x, y, 3, 0, Math.PI * 2);
+                        ctx.arc(x, y, 4, 0, Math.PI * 2); // Mas grandes
                         ctx.fillStyle = '#e67e22';
-                        ctx.shadowColor = 'rgba(230, 126, 34, 0.5)';
-                        ctx.shadowBlur = 6;
                         ctx.fill();
-                        ctx.shadowBlur = 0;
+                        ctx.strokeStyle = '#d35400';
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
                         
-                        // Flecha hacia el cristal (mas lenta)
-                        const endX = crystal.x + Math.cos(angle) * (crystal.size + 10);
-                        const endY = crystal.y + Math.sin(angle) * (crystal.size + 10);
-                        drawAnimatedArrow(ctx, x, y, endX, endY, '#e67e22', processTime * 0.3 + i);
+                        // Flecha hacia el cristal muy lenta
+                        if (processTime % 8 < 4) { // Aparece intermitentemente
+                            const endX = crystal.x + Math.cos(angle) * (crystal.size + 15);
+                            const endY = crystal.y + Math.sin(angle) * (crystal.size + 15);
+                            drawAnimatedArrow(ctx, x, y, endX, endY, '#e67e22', processTime * 0.1 + i);
+                        }
                     }
                 }
+                
+                // Zona de influencia del cristal
+                ctx.beginPath();
+                ctx.arc(crystal.x, crystal.y, crystal.size + 30, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(44, 62, 80, 0.3)';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([8, 8]);
+                ctx.stroke();
+                ctx.setLineDash([]);
             });
             
-            // Nucleos de cristalizacion apareciendo (mas lento)
-            for (let i = 0; i < 5; i++) {
-                const x = Math.random() * canvas.width;
-                const y = Math.random() * canvas.height;
-                const size = Math.sin(processTime * 1 + i * Math.PI) * 2 + 2; // Mas lento
+            // Nucleos de cristalizacion apareciendo muy lentamente
+            for (let i = 0; i < 3; i++) { // Menos nucleos
+                const x = 100 + (i * (canvas.width - 200)) / 2;
+                const y = 100 + Math.sin(processTime * 0.3 + i) * 20;
+                const size = Math.max(0, Math.sin(processTime * 0.5 + i * Math.PI) * 3 + 1); // Mas lento
                 
                 if (size > 0) {
                     ctx.beginPath();
                     ctx.arc(x, y, size, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(44, 62, 80, 0.7)';
+                    ctx.fillStyle = 'rgba(44, 62, 80, 0.8)';
                     ctx.fill();
+                    
+                    ctx.fillStyle = '#2c3e50';
+                    ctx.font = '8px Arial';
+                    ctx.fillText('n', x - 2, y + 2);
                 }
             }
             
-            // Etiquetas
+            // Etiquetas mas claras
             ctx.fillStyle = '#2c3e50';
-            ctx.font = 'bold 14px Arial';
-            ctx.fillText('Licor Madre (Solucion sobresaturada)', 10, 25);
-            ctx.fillText('Cristales en crecimiento', 10, 45);
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('Cristalizacion', 10, 25);
+            
+            ctx.font = '14px Arial';
+            ctx.fillStyle = '#9b59b6';
+            ctx.fillText('Solucion sobresaturada', 10, 45);
+            ctx.fillStyle = '#e67e22';
+            ctx.fillText('Particulas cristalizando', 10, 65);
             
             // Concentracion
-            ctx.fillStyle = '#9b59b6';
-            ctx.font = '12px Arial';
-            ctx.fillText('Concentracion: 150% saturacion', 10, canvas.height - 10);
+            ctx.fillStyle = '#8e44ad';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('Concentracion: 150%', 10, canvas.height - 30);
+            ctx.fillText('de saturacion', 10, canvas.height - 15);
         }
 
         function drawAnimatedArrow(ctx, fromX, fromY, toX, toY, color, timeOffset) {
-            const opacity = 0.5 + 0.5 * Math.sin(timeOffset * 2); // Mas lento (era 4)
-            const headLen = 8;
+            const opacity = 0.5 + 0.4 * Math.sin(timeOffset * 1.5); // Mas lento
+            const headLen = 10; // Mas grande
             const angle = Math.atan2(toY - fromY, toX - fromX);
             
             ctx.globalAlpha = opacity;
             ctx.strokeStyle = color;
             ctx.fillStyle = color;
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 3; // Mas gruesa
             
             // Linea principal
             ctx.beginPath();
@@ -1489,7 +1551,7 @@
             ctx.lineTo(toX, toY);
             ctx.stroke();
             
-            // Cabeza de la flecha
+            // Cabeza de la flecha mas grande
             ctx.beginPath();
             ctx.moveTo(toX, toY);
             ctx.lineTo(toX - headLen * Math.cos(angle - Math.PI / 6), toY - headLen * Math.sin(angle - Math.PI / 6));
