@@ -23,7 +23,7 @@ Este sitio web educativo cubre:
 
 ## 🌐 Ver el Sitio
 
-El sitio está desplegado en GitHub Pages: [Ver Material Educativo](https://pjvalverde.github.io/bioreactores/)
+¡Explora el material online aquí! 👉 [Ver Material Educativo](https://pjvalverde.github.io/bioreactores/)
 
 ## 🖼️ Recursos Visuales
 
