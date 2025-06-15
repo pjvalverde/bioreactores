@@ -58,4 +58,4 @@ Este material está diseñado para:
 
 *Material educativo desarrollado para cursos de Bioingeniería* 
 
-_Deploy forzado: actualización de configuración de GitHub Pages_
+_Deploy forzado: eliminación completa de referencias al Prof. Gerd Seibold_
