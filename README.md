@@ -57,3 +57,5 @@ Este material está diseñado para:
 ---
 
 *Material educativo desarrollado para cursos de Bioingeniería* 
+
+_Deploy forzado: actualización de configuración de GitHub Pages_
