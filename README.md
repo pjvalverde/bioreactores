@@ -54,8 +54,3 @@ Este material está diseñado para:
 - JavaScript vanilla
 - GitHub Pages para despliegue
 
----
-
-*Material educativo desarrollado para cursos de Bioingeniería* 
-
-_Deploy forzado: eliminación completa de referencias al Prof. Gerd Seibold_
