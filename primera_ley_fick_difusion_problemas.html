@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Primera Ley de Fick - Problemas Interactivos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .law-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .problem-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            background: #f8f9fa;
+            color: #666;
+        }
+
+        .tab-button.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .tab-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .problem-content {
+            display: none;
+        }
+
+        .problem-content.active {
+            display: block;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .problem-statement {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #007bff;
+        }
+
+        .simulation-area {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #28a745;
+        }
+
+        .interactive-controls {
+            margin: 15px 0;
+        }
+
+        .control-group {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-group label {
+            min-width: 120px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .slider {
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .value-display {
+            min-width: 80px;
+            padding: 5px 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            font-family: monospace;
+            text-align: center;
+        }
+
+        canvas {
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .solution-steps {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #007bff;
+        }
+
+        .formula-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+            font-size: 18px;
+            border: 2px solid #007bff;
+        }
+
+        .result-box {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 5px solid #28a745;
+        }
+
+        .hint-box {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 5px solid #ffc107;
+        }
+
+        .verification-area {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px dashed #007bff;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .student-input {
+            padding: 8px 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 150px;
+        }
+
+        .check-button {
+            padding: 8px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .check-button:hover {
+            background: #218838;
+        }
+
+        .feedback {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .problem-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-group {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 5px;
+            }
+            
+            .control-group label {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧬 Primera Ley de Fick en Bioingeniería</h1>
+            <p>Problemas Interactivos para Estudiantes</p>
+        </header>
+
+        <div class="law-section">
+            <h2>📚 Primera Ley de Fick</h2>
+            <div class="formula-box">
+                <strong>J = -D × (dC/dx)</strong>
+            </div>
+            <p><strong>Donde:</strong></p>
+            <ul>
+                <li><strong>J</strong> = Flujo másico [mol/m²·s] o [kg/m²·s]</li>
+                <li><strong>D</strong> = Coeficiente de difusión [m²/s]</li>
+                <li><strong>dC/dx</strong> = Gradiente de concentración [mol/m⁴] o [kg/m⁴]</li>
+            </ul>
+            <p>El signo negativo indica que la difusión ocurre desde alta hacia baja concentración.</p>
+        </div>
+
+        <div class="problem-tabs">
+            <button class="tab-button active" onclick="showTab('resolved')">📖 Problema Resuelto</button>
+            <button class="tab-button" onclick="showTab('practice')">✏️ Problema para Resolver</button>
+        </div>
+
+        <!-- PROBLEMA RESUELTO -->
+        <div class="problem-content active" id="resolved">
+            <h2>📖 Problema Resuelto: Difusión de Oxígeno en Tejido Muscular</h2>
+            
+            <div class="problem-grid">
+                <div class="problem-statement">
+                    <h3>🎯 Enunciado</h3>
+                    <p>Durante el ejercicio, el oxígeno debe difundirse desde los capilares sanguíneos hasta las mitocondrias en las células musculares. Considere una membrana celular de espesor 8 μm.</p>
+                    
+                    <p><strong>Datos:</strong></p>
+                    <ul>
+                        <li>Concentración en capilar: 0.13 mol/m³</li>
+                        <li>Concentración en mitocondria: 0.02 mol/m³</li>
+                        <li>Coeficiente de difusión: 2.1 × 10⁻⁹ m²/s</li>
+                        <li>Espesor de membrana: 8 μm</li>
+                    </ul>
+                    
+                    <p><strong>Calcular:</strong> El flujo de oxígeno a través de la membrana celular.</p>
+                </div>
+
+                <div class="simulation-area">
+                    <h3>🔬 Simulación Interactiva</h3>
+                    <canvas id="resolvedCanvas" width="400" height="300"></canvas>
+                    
+                    <div class="interactive-controls">
+                        <div class="control-group">
+                            <label>C₁ (capilar):</label>
+                            <input type="range" class="slider" id="c1_resolved" min="0.08" max="0.20" step="0.01" value="0.13">
+                            <span class="value-display" id="c1_resolved_value">0.13 mol/m³</span>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label>C₂ (mitocondria):</label>
+                            <input type="range" class="slider" id="c2_resolved" min="0.01" max="0.08" step="0.01" value="0.02">
+                            <span class="value-display" id="c2_resolved_value">0.02 mol/m³</span>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label>Espesor (μm):</label>
+                            <input type="range" class="slider" id="thickness_resolved" min="5" max="15" step="1" value="8">
+                            <span class="value-display" id="thickness_resolved_value">8 μm</span>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label>D (×10⁻⁹ m²/s):</label>
+                            <input type="range" class="slider" id="diffusion_resolved" min="1.0" max="4.0" step="0.1" value="2.1">
+                            <span class="value-display" id="diffusion_resolved_value">2.1 ×10⁻⁹ m²/s</span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-box">
+                        <h4>📊 Resultado:</h4>
+                        <p><strong>Flujo calculado:</strong> <span id="flux_resolved_result">2.89 × 10⁻⁵ mol/m²·s</span></p>
+                        <p><strong>Gradiente:</strong> <span id="gradient_resolved_result">-13750 mol/m⁴</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="solution-steps">
+                <h3>📋 Solución Paso a Paso</h3>
+                
+                <h4>Paso 1: Identificar datos</h4>
+                <ul>
+                    <li>C₁ = 0.13 mol/m³ (concentración en capilar)</li>
+                    <li>C₂ = 0.02 mol/m³ (concentración en mitocondria)</li>
+                    <li>Δx = 8 μm = 8 × 10⁻⁶ m</li>
+                    <li>D = 2.1 × 10⁻⁹ m²/s</li>
+                </ul>
+                
+                <h4>Paso 2: Calcular gradiente de concentración</h4>
+                <div class="formula-box">
+                    dC/dx = (C₂ - C₁) / Δx = (0.02 - 0.13) / (8 × 10⁻⁶) = -13,750 mol/m⁴
+                </div>
+                
+                <h4>Paso 3: Aplicar Primera Ley de Fick</h4>
+                <div class="formula-box">
+                    J = -D × (dC/dx) = -(2.1 × 10⁻⁹) × (-13,750) = 2.89 × 10⁻⁵ mol/m²·s
+                </div>
+                
+                <h4>Paso 4: Interpretar resultado</h4>
+                <p>El flujo positivo indica que el oxígeno se mueve desde el capilar (alta concentración) hacia la mitocondria (baja concentración), lo cual es fisiológicamente correcto.</p>
+            </div>
+        </div>
+
+        <!-- PROBLEMA PARA RESOLVER -->
+        <div class="problem-content" id="practice">
+            <h2>✏️ Problema para Resolver: Difusión de Glucosa a través de Membrana Intestinal</h2>
+            
+            <div class="problem-grid">
+                <div class="problem-statement">
+                    <h3>🎯 Enunciado</h3>
+                    <p>La glucosa debe atravesar la mucosa intestinal para ser absorbida al torrente sanguíneo. Considere la difusión pasiva a través del epitelio intestinal.</p>
+                    
+                    <p><strong>Datos:</strong></p>
+                    <ul>
+                        <li>Concentración en lumen intestinal: 15 mM</li>
+                        <li>Concentración en sangre: 5 mM</li>
+                        <li>Coeficiente de difusión: 6.7 × 10⁻¹⁰ m²/s</li>
+                        <li>Espesor del epitelio: 25 μm</li>
+                    </ul>
+                    
+                    <p><strong>Calcular:</strong></p>
+                    <ol>
+                        <li>El gradiente de concentración (mol/m⁴)</li>
+                        <li>El flujo de glucosa (mol/m²·s)</li>
+                        <li>La cantidad absorbida por cm² en 1 hora (μmol/cm²·h)</li>
+                    </ol>
+                    
+                    <div class="hint-box">
+                        <h4>💡 Pistas:</h4>
+                        <ul>
+                            <li>Convertir mM a mol/m³: 1 mM = 1 mol/m³</li>
+                            <li>Considerar el signo del gradiente</li>
+                            <li>Para la parte 3: convertir unidades y tiempo</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="simulation-area">
+                    <h3>🔬 Simulación Verificadora</h3>
+                    <canvas id="practiceCanvas" width="400" height="300"></canvas>
+                    
+                    <div class="interactive-controls">
+                        <div class="control-group">
+                            <label>C₁ (lumen):</label>
+                            <input type="range" class="slider" id="c1_practice" min="10" max="20" step="1" value="15">
+                            <span class="value-display" id="c1_practice_value">15 mM</span>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label>C₂ (sangre):</label>
+                            <input type="range" class="slider" id="c2_practice" min="3" max="8" step="1" value="5">
+                            <span class="value-display" id="c2_practice_value">5 mM</span>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label>Espesor (μm):</label>
+                            <input type="range" class="slider" id="thickness_practice" min="20" max="35" step="1" value="25">
+                            <span class="value-display" id="thickness_practice_value">25 μm</span>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label>D (×10⁻¹⁰ m²/s):</label>
+                            <input type="range" class="slider" id="diffusion_practice" min="5.0" max="9.0" step="0.1" value="6.7">
+                            <span class="value-display" id="diffusion_practice_value">6.7 ×10⁻¹⁰ m²/s</span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-box">
+                        <h4>📊 Valores de la Simulación:</h4>
+                        <p><strong>Gradiente calculado:</strong> <span id="gradient_practice_result">-400000 mol/m⁴</span></p>
+                        <p><strong>Flujo calculado:</strong> <span id="flux_practice_result">2.68 × 10⁻⁴ mol/m²·s</span></p>
+                        <p><strong>Absorción/hora:</strong> <span id="absorption_practice_result">96.5 μmol/cm²·h</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verification-area">
+                <h3>✅ Verifica tus Respuestas</h3>
+                <p>Resuelve el problema en papel y luego ingresa tus respuestas para verificar:</p>
+                
+                <div class="input-group">
+                    <label>1. Gradiente de concentración (mol/m⁴):</label>
+                    <input type="number" class="student-input" id="student_gradient" placeholder="-400000">
+                    <button class="check-button" onclick="checkGradient()">Verificar</button>
+                </div>
+                <div class="feedback" id="gradient_feedback"></div>
+                
+                <div class="input-group">
+                    <label>2. Flujo de glucosa (×10⁻⁴ mol/m²·s):</label>
+                    <input type="number" class="student-input" id="student_flux" placeholder="2.68" step="0.01">
+                    <button class="check-button" onclick="checkFlux()">Verificar</button>
+                </div>
+                <div class="feedback" id="flux_feedback"></div>
+                
+                <div class="input-group">
+                    <label>3. Absorción (μmol/cm²·h):</label>
+                    <input type="number" class="student-input" id="student_absorption" placeholder="96.5" step="0.1">
+                    <button class="check-button" onclick="checkAbsorption()">Verificar</button>
+                </div>
+                <div class="feedback" id="absorption_feedback"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let animationTime = 0;
+        let resolvedAnimationId, practiceAnimationId;
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            calculateResolved();
+            calculatePractice();
+            startAnimations();
+        });
+
+        function setupEventListeners() {
+            // Listeners para problema resuelto
+            document.getElementById('c1_resolved').addEventListener('input', function() {
+                document.getElementById('c1_resolved_value').textContent = this.value + ' mol/m³';
+                calculateResolved();
+            });
+            
+            document.getElementById('c2_resolved').addEventListener('input', function() {
+                document.getElementById('c2_resolved_value').textContent = this.value + ' mol/m³';
+                calculateResolved();
+            });
+            
+            document.getElementById('thickness_resolved').addEventListener('input', function() {
+                document.getElementById('thickness_resolved_value').textContent = this.value + ' μm';
+                calculateResolved();
+            });
+            
+            document.getElementById('diffusion_resolved').addEventListener('input', function() {
+                document.getElementById('diffusion_resolved_value').textContent = this.value + ' ×10⁻⁹ m²/s';
+                calculateResolved();
+            });
+
+            // Listeners para problema de práctica
+            document.getElementById('c1_practice').addEventListener('input', function() {
+                document.getElementById('c1_practice_value').textContent = this.value + ' mM';
+                calculatePractice();
+            });
+            
+            document.getElementById('c2_practice').addEventListener('input', function() {
+                document.getElementById('c2_practice_value').textContent = this.value + ' mM';
+                calculatePractice();
+            });
+            
+            document.getElementById('thickness_practice').addEventListener('input', function() {
+                document.getElementById('thickness_practice_value').textContent = this.value + ' μm';
+                calculatePractice();
+            });
+            
+            document.getElementById('diffusion_practice').addEventListener('input', function() {
+                document.getElementById('diffusion_practice_value').textContent = this.value + ' ×10⁻¹⁰ m²/s';
+                calculatePractice();
+            });
+        }
+
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            document.querySelectorAll('.problem-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Mostrar pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function calculateResolved() {
+            const c1 = parseFloat(document.getElementById('c1_resolved').value);
+            const c2 = parseFloat(document.getElementById('c2_resolved').value);
+            const thickness = parseFloat(document.getElementById('thickness_resolved').value) * 1e-6; // μm to m
+            const D = parseFloat(document.getElementById('diffusion_resolved').value) * 1e-9; // ×10⁻⁹ m²/s
+            
+            const gradient = (c2 - c1) / thickness;
+            const flux = -D * gradient;
+            
+            document.getElementById('gradient_resolved_result').textContent = gradient.toExponential(3) + ' mol/m⁴';
+            document.getElementById('flux_resolved_result').textContent = flux.toExponential(2) + ' mol/m²·s';
+        }
+
+        function calculatePractice() {
+            const c1 = parseFloat(document.getElementById('c1_practice').value); // mM = mol/m³
+            const c2 = parseFloat(document.getElementById('c2_practice').value); // mM = mol/m³
+            const thickness = parseFloat(document.getElementById('thickness_practice').value) * 1e-6; // μm to m
+            const D = parseFloat(document.getElementById('diffusion_practice').value) * 1e-10; // ×10⁻¹⁰ m²/s
+            
+            const gradient = (c2 - c1) / thickness;
+            const flux = -D * gradient;
+            const absorption_per_hour = flux * 3600 * 1e2; // mol/m²·s to μmol/cm²·h (×3600 s/h × 1e2 cm²/m² × 1e6 μmol/mol)
+            
+            document.getElementById('gradient_practice_result').textContent = gradient.toExponential(3) + ' mol/m⁴';
+            document.getElementById('flux_practice_result').textContent = flux.toExponential(2) + ' mol/m²·s';
+            document.getElementById('absorption_practice_result').textContent = absorption_per_hour.toFixed(1) + ' μmol/cm²·h';
+        }
+
+        function checkGradient() {
+            const studentAnswer = parseFloat(document.getElementById('student_gradient').value);
+            const correctAnswer = -400000; // Para valores por defecto
+            const tolerance = 20000; // 5% tolerance
+            
+            const feedback = document.getElementById('gradient_feedback');
+            
+            if (Math.abs(studentAnswer - correctAnswer) <= tolerance) {
+                feedback.textContent = '✅ ¡Correcto! El gradiente es negativo porque la concentración disminuye del lumen a la sangre.';
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.textContent = `❌ Incorrecto. Revisa el cálculo: (C₂ - C₁) / Δx. Respuesta esperada: ${correctAnswer} mol/m⁴`;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function checkFlux() {
+            const studentAnswer = parseFloat(document.getElementById('student_flux').value);
+            const correctAnswer = 2.68; // ×10⁻⁴ mol/m²·s
+            const tolerance = 0.1;
+            
+            const feedback = document.getElementById('flux_feedback');
+            
+            if (Math.abs(studentAnswer - correctAnswer) <= tolerance) {
+                feedback.textContent = '✅ ¡Correcto! Recuerda que el flujo es positivo porque va en dirección de la absorción.';
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.textContent = `❌ Incorrecto. Usa J = -D × (dC/dx). Respuesta esperada: ${correctAnswer} ×10⁻⁴ mol/m²·s`;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function checkAbsorption() {
+            const studentAnswer = parseFloat(document.getElementById('student_absorption').value);
+            const correctAnswer = 96.5;
+            const tolerance = 5;
+            
+            const feedback = document.getElementById('absorption_feedback');
+            
+            if (Math.abs(studentAnswer - correctAnswer) <= tolerance) {
+                feedback.textContent = '✅ ¡Excelente! Has convertido correctamente las unidades: mol/m²·s → μmol/cm²·h';
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.textContent = `❌ Revisa la conversión de unidades. Multiplica por 3600 (s→h) y 100 (m²→cm²) y 1×10⁶ (mol→μmol). Respuesta: ${correctAnswer} μmol/cm²·h`;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function startAnimations() {
+            animateResolved();
+            animatePractice();
+        }
+
+        function animateResolved() {
+            animationTime += 0.02;
+            drawResolvedSimulation();
+            resolvedAnimationId = requestAnimationFrame(animateResolved);
+        }
+
+        function animatePractice() {
+            animationTime += 0.02;
+            drawPracticeSimulation();
+            practiceAnimationId = requestAnimationFrame(animatePractice);
+        }
+
+        function drawResolvedSimulation() {
+            const canvas = document.getElementById('resolvedCanvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Obtener valores actuales
+            const c1 = parseFloat(document.getElementById('c1_resolved').value);
+            const c2 = parseFloat(document.getElementById('c2_resolved').value);
+            const thickness = parseFloat(document.getElementById('thickness_resolved').value);
+            
+            // Dibujar membrana celular
+            const membraneX = canvas.width * 0.4;
+            const membraneWidth = (thickness / 15) * canvas.width * 0.2; // Escala relativa
+            
+            ctx.fillStyle = '#6c757d';
+            ctx.fillRect(membraneX, 50, membraneWidth, canvas.height - 100);
+            
+            // Capilar (izquierda)
+            ctx.fillStyle = 'rgba(220, 53, 69, 0.3)';
+            ctx.fillRect(0, 50, membraneX, canvas.height - 100);
+            
+            // Mitocondria (derecha)
+            ctx.fillStyle = 'rgba(40, 167, 69, 0.3)';
+            ctx.fillRect(membraneX + membraneWidth, 50, canvas.width - (membraneX + membraneWidth), canvas.height - 100);
+            
+            // Etiquetas
+            ctx.fillStyle = '#000';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('Capilar', 10, 30);
+            ctx.fillText('Membrana', membraneX, 30);
+            ctx.fillText('Mitocondria', membraneX + membraneWidth + 10, 30);
+            
+            ctx.font = '12px Arial';
+            ctx.fillText(`${c1} mol/m³`, 10, 45);
+            ctx.fillText(`${c2} mol/m³`, membraneX + membraneWidth + 10, 45);
+            
+            // Moléculas de oxígeno animadas
+            const numMolecules = Math.floor(c1 * 20); // Proporcional a concentración
+            for (let i = 0; i < numMolecules; i++) {
+                const x = 20 + Math.sin(animationTime + i) * 15 + (i % 3) * 40;
+                const y = 80 + (i % 8) * 20 + Math.cos(animationTime * 0.5 + i) * 5;
+                
+                if (x < membraneX - 10) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, 4, 0, Math.PI * 2);
+                    ctx.fillStyle = '#dc3545';
+                    ctx.fill();
+                    
+                    // Flecha hacia la membrana
+                    if (i % 3 === 0) {
+                        drawArrow(ctx, x + 8, y, x + 20, y, '#dc3545');
+                    }
+                }
+            }
+            
+            // Moléculas en zona de mitocondria (menos cantidad)
+            const numMoleculesMito = Math.floor(c2 * 20);
+            for (let i = 0; i < numMoleculesMito; i++) {
+                const x = membraneX + membraneWidth + 20 + (i % 3) * 30;
+                const y = 80 + (i % 6) * 25 + Math.sin(animationTime * 0.3 + i) * 3;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = '#28a745';
+                ctx.fill();
+            }
+            
+            // Gradiente visual
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+            gradient.addColorStop(0, 'rgba(220, 53, 69, 0.8)');
+            gradient.addColorStop(0.4, 'rgba(220, 53, 69, 0.4)');
+            gradient.addColorStop(0.6, 'rgba(40, 167, 69, 0.4)');
+            gradient.addColorStop(1, 'rgba(40, 167, 69, 0.8)');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, canvas.height - 30, canvas.width, 20);
+            
+            ctx.fillStyle = '#000';
+            ctx.font = '10px Arial';
+            ctx.fillText('Alta [O₂]', 10, canvas.height - 35);
+            ctx.fillText('Baja [O₂]', canvas.width - 60, canvas.height - 35);
+        }
+
+        function drawPracticeSimulation() {
+            const canvas = document.getElementById('practiceCanvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Obtener valores actuales
+            const c1 = parseFloat(document.getElementById('c1_practice').value);
+            const c2 = parseFloat(document.getElementById('c2_practice').value);
+            const thickness = parseFloat(document.getElementById('thickness_practice').value);
+            
+            // Dibujar epitelio intestinal
+            const epitheliumX = canvas.width * 0.35;
+            const epitheliumWidth = (thickness / 35) * canvas.width * 0.3; // Escala relativa
+            
+            ctx.fillStyle = '#ffc107';
+            ctx.fillRect(epitheliumX, 40, epitheliumWidth, canvas.height - 80);
+            
+            // Lumen intestinal (izquierda)
+            ctx.fillStyle = 'rgba(138, 43, 226, 0.3)';
+            ctx.fillRect(0, 40, epitheliumX, canvas.height - 80);
+            
+            // Sangre (derecha)
+            ctx.fillStyle = 'rgba(220, 53, 69, 0.3)';
+            ctx.fillRect(epitheliumX + epitheliumWidth, 40, canvas.width - (epitheliumX + epitheliumWidth), canvas.height - 80);
+            
+            // Etiquetas
+            ctx.fillStyle = '#000';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('Lumen', 10, 25);
+            ctx.fillText('Epitelio', epitheliumX, 25);
+            ctx.fillText('Sangre', epitheliumX + epitheliumWidth + 10, 25);
+            
+            ctx.font = '12px Arial';
+            ctx.fillText(`${c1} mM`, 10, canvas.height - 50);
+            ctx.fillText(`${c2} mM`, epitheliumX + epitheliumWidth + 10, canvas.height - 50);
+            
+            // Moléculas de glucosa animadas
+            const numGlucose = Math.floor(c1 * 1.5); // Proporcional a concentración
+            for (let i = 0; i < numGlucose; i++) {
+                const x = 15 + Math.sin(animationTime + i) * 12 + (i % 4) * 35;
+                const y = 60 + (i % 6) * 25 + Math.cos(animationTime * 0.4 + i) * 4;
+                
+                if (x < epitheliumX - 10) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, 5, 0, Math.PI * 2);
+                    ctx.fillStyle = '#8a2be2';
+                    ctx.fill();
+                    ctx.strokeStyle = '#4b0082';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    
+                    // Flecha hacia el epitelio
+                    if (i % 4 === 0) {
+                        drawArrow(ctx, x + 10, y, x + 25, y, '#8a2be2');
+                    }
+                }
+            }
+            
+            // Moléculas en sangre (menos cantidad)
+            const numGlucoseSangre = Math.floor(c2 * 1.5);
+            for (let i = 0; i < numGlucoseSangre; i++) {
+                const x = epitheliumX + epitheliumWidth + 15 + (i % 3) * 40;
+                const y = 60 + (i % 5) * 30 + Math.sin(animationTime * 0.3 + i) * 3;
+                
+                if (x < canvas.width - 10) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, 4, 0, Math.PI * 2);
+                    ctx.fillStyle = '#dc3545';
+                    ctx.fill();
+                    ctx.strokeStyle = '#b02a37';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+            }
+            
+            // Flujo a través del epitelio
+            const flowSpeed = (c1 - c2) / 35; // Proporcional al gradiente
+            for (let i = 0; i < 3; i++) {
+                const x = epitheliumX + (i + 1) * epitheliumWidth / 4 + Math.sin(animationTime * 2 + i) * 2;
+                const y = 70 + i * 40;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = '#fd7e14';
+                ctx.fill();
+                
+                // Flecha de flujo
+                drawArrow(ctx, x + 5, y, x + 15, y, '#fd7e14');
+            }
+            
+            // Gradiente visual en la parte inferior
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+            gradient.addColorStop(0, 'rgba(138, 43, 226, 0.8)');
+            gradient.addColorStop(0.35, 'rgba(138, 43, 226, 0.4)');
+            gradient.addColorStop(0.65, 'rgba(220, 53, 69, 0.4)');
+            gradient.addColorStop(1, 'rgba(220, 53, 69, 0.8)');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, canvas.height - 25, canvas.width, 15);
+            
+            ctx.fillStyle = '#000';
+            ctx.font = '10px Arial';
+            ctx.fillText('Alta [Glucosa]', 10, canvas.height - 30);
+            ctx.fillText('Baja [Glucosa]', canvas.width - 80, canvas.height - 30);
+        }
+
+        function drawArrow(ctx, fromX, fromY, toX, toY, color) {
+            const opacity = 0.6 + 0.4 * Math.sin(animationTime * 2);
+            ctx.globalAlpha = opacity;
+            
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 2;
+            
+            const angle = Math.atan2(toY - fromY, toX - fromX);
+            const headLength = 6;
+            
+            // Línea principal
+            ctx.beginPath();
+            ctx.moveTo(fromX, fromY);
+            ctx.lineTo(toX, toY);
+            ctx.stroke();
+            
+            // Cabeza de flecha
+            ctx.beginPath();
+            ctx.moveTo(toX, toY);
+            ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6), toY - headLength * Math.sin(angle - Math.PI / 6));
+            ctx.lineTo(toX - headLength * Math.cos(angle + Math.PI / 6), toY - headLength * Math.sin(angle + Math.PI / 6));
+            ctx.closePath();
+            ctx.fill();
+            
+            ctx.globalAlpha = 1;
+        }
+    </script>
+</body>
+</html>
