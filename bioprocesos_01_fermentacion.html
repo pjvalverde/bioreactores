@@ -244,6 +244,31 @@
             margin: 20px 0;
         }
 
+        .content-image {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            margin: 20px auto;
+            display: block;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .content-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .image-caption {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
         .comparison-table {
             width: 100%;
             border-collapse: collapse;
@@ -317,9 +342,8 @@
             </div>
 
             <div style="text-align: center; margin: 20px 0;">
-                <img src="file:///C:/Users/pblva/OneDrive%20-%20QFplus/PUCE/2025/2025_I/Operaciones_Unitarias/Bioreactor/imagenes/image1.png" alt="Comparación de tamaños - Estudiantes DTU vs Cabello humano vs Bacteria" 
-                     style="width: 100%; max-width: 700px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
-                <p style="font-style: italic; color: #6c757d; margin-top: 10px;">
+                <img src="imagenes/z1.png" alt="Comparación de tamaños - Estudiantes DTU vs Cabello humano vs Bacteria" class="content-image">
+                <p class="image-caption">
                     Comparación de tamaños: Estudiantes DTU (1.5-2m) vs Cabello humano (50 μm) vs Bacteria (0.5 μm)
                 </p>
             </div>
@@ -363,15 +387,13 @@
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-                <img src="file:///C:/Users/pblva/OneDrive%20-%20QFplus/PUCE/2025/2025_I/Operaciones_Unitarias/Bioreactor/imagenes/image2.png" alt="Estructura celular procariota" 
-                     style="width: 100%; max-width: 600px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-bottom: 20px;">
-                <p style="font-style: italic; color: #6c757d; margin-bottom: 20px;">
+                <img src="imagenes/z2.png" alt="Estructura celular procariota" class="content-image" style="margin-bottom: 20px;">
+                <p class="image-caption" style="margin-bottom: 20px;">
                     Estructura de una célula procariota típica
                 </p>
                 
-                <img src="file:///C:/Users/pblva/OneDrive%20-%20QFplus/PUCE/2025/2025_I/Operaciones_Unitarias/Bioreactor/imagenes/image3.png" alt="Estructura celular eucariota - Saccharomyces cerevisiae" 
-                     style="width: 100%; max-width: 600px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
-                <p style="font-style: italic; color: #6c757d; margin-top: 10px;">
+                <img src="imagenes/z3.png" alt="Estructura celular eucariota - Saccharomyces cerevisiae" class="content-image">
+                <p class="image-caption">
                     Estructura de célula eucariota: Saccharomyces cerevisiae (levadura de panadería)
                 </p>
             </div>
@@ -393,8 +415,11 @@
                             <li>Filtrado de fragmentos de pan</li>
                             <li>Obtención de líquido fermentado (cerveza)</li>
                         </ol>
-                        <div class="image-placeholder">
-                            📸 <strong>Imagen:</strong> Cervecería y panadería egipcia antigua
+                        <div style="text-align: center; margin: 20px 0;">
+                            <img src="imagenes/z4.png" alt="Cervecería y panadería egipcia antigua" class="content-image">
+                            <p class="image-caption">
+                                Cervecería y panadería egipcia antigua
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -435,8 +460,11 @@
                             <br><em>(Proceso anaeróbico en tanques sin oxígeno)</em>
                         </div>
 
-                        <div class="image-placeholder">
-                            📸 <strong>Imagen:</strong> Cervecería DTU moderna - Proceso completo
+                        <div style="text-align: center; margin: 20px 0;">
+                            <img src="imagenes/z5.png" alt="Cervecería DTU moderna - Proceso completo" class="content-image">
+                            <p class="image-caption">
+                                Cervecería DTU moderna - Proceso completo
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -460,8 +488,11 @@
                             <li>Adición continua de vino sin disturbar la superficie</li>
                         </ul>
 
-                        <div class="image-placeholder">
-                            📸 <strong>Imágenes:</strong> Instalación de vinagre de Orleans, proceso en barricas
+                        <div style="text-align: center; margin: 20px 0;">
+                            <img src="imagenes/z6.png" alt="Instalación de vinagre de Orleans, proceso en barricas" class="content-image">
+                            <p class="image-caption">
+                                Instalación de vinagre de Orleans, proceso en barricas
+                            </p>
                         </div>
 
                         <h4>Mejoras del Proceso</h4>
@@ -474,8 +505,11 @@
                             <li>Proceso optimizado con altas concentraciones de O₂ y etanol</li>
                         </ul>
 
-                        <div class="image-placeholder">
-                            📸 <strong>Imagen:</strong> Biorreactor moderno para producción de vinagre
+                        <div style="text-align: center; margin: 20px 0;">
+                            <img src="imagenes/z7.png" alt="Bioreactor moderno para producción de vinagre" class="content-image">
+                            <p class="image-caption">
+                                Bioreactor moderno para producción de vinagre
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -498,8 +532,11 @@
                     </ul>
                 </div>
 
-                <div class="image-placeholder">
-                    📸 <strong>Imagen:</strong> Pasteur en su laboratorio
+                <div style="text-align: center; margin: 20px 0;">
+                    <img src="imagenes/z8.png" alt="Pasteur en su laboratorio" class="content-image">
+                    <p class="image-caption">
+                        Pasteur en su laboratorio
+                    </p>
                 </div>
             </div>
 
@@ -519,8 +556,11 @@
                         </ul>
                     </div>
 
-                    <div class="image-placeholder">
-                        📸 <strong>Imagen:</strong> Sala de fermentación British Acetone Toronto (1917)
+                    <div style="text-align: center; margin: 20px 0;">
+                        <img src="imagenes/z9.png" alt="Sala de fermentación British Acetone Toronto (1917)" class="content-image">
+                        <p class="image-caption">
+                            Sala de fermentación British Acetone Toronto (1917)
+                        </p>
                     </div>
 
                     <div class="highlight-box">
@@ -551,8 +591,11 @@
                         <p><strong>Premio Nobel 1945:</strong> Alexander Fleming, Ernst Boris Chain y Sir Walter Florey por el descubrimiento de la penicilina y su efecto curativo en enfermedades infecciosas.</p>
                     </div>
 
-                    <div class="image-placeholder">
-                        📸 <strong>Imagen:</strong> Placa de Petri mostrando el efecto de la penicilina
+                    <div style="text-align: center; margin: 20px 0;">
+                        <img src="imagenes/z10.png" alt="Placa de Petri mostrando el efecto de la penicilina" class="content-image">
+                        <p class="image-caption">
+                            Placa de Petri mostrando el efecto de la penicilina
+                        </p>
                     </div>
 
                     <h4>Impacto en la Biotecnología</h4>
@@ -631,8 +674,11 @@
                 </div>
             </div>
 
-            <div class="image-placeholder">
-                📸 <strong>Imagen:</strong> Esquema del proceso de clonación molecular
+            <div style="text-align: center; margin: 20px 0;">
+                <img src="imagenes/z11.png" alt="Esquema del proceso de clonación molecular" class="content-image">
+                <p class="image-caption">
+                    Esquema del proceso de clonación molecular
+                </p>
             </div>
 
             <h3>⚙️ Ingeniería Metabólica</h3>
@@ -648,8 +694,11 @@
                 </ol>
             </div>
 
-            <div class="image-placeholder">
-                📸 <strong>Imagen:</strong> Red metabólica compleja mostrando múltiples reacciones celulares
+            <div style="text-align: center; margin: 20px 0;">
+                <img src="imagenes/z12.png" alt="Red metabólica compleja mostrando múltiples reacciones celulares" class="content-image">
+                <p class="image-caption">
+                    Red metabólica compleja mostrando múltiples reacciones celulares
+                </p>
             </div>
 
             <h3>⛽ Producción de Biocombustibles (1990-presente)</h3>
@@ -687,8 +736,11 @@
                 </div>
             </div>
 
-            <div class="image-placeholder">
-                📸 <strong>Imagen:</strong> Planta industrial de bioetanol
+            <div style="text-align: center; margin: 20px 0;">
+                <img src="imagenes/z13.png" alt="Planta industrial de bioetanol" class="content-image">
+                <p class="image-caption">
+                    Planta industrial de bioetanol
+                </p>
             </div>
 
             <h3>🏭 Estructura General de un Bioproceso</h3>
