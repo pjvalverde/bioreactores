@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 17.3 McCabe - Difusión de Etanol</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            background: rgba(0,0,0,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .simulation-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .controls-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .results-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            grid-column: 1 / -1;
+        }
+
+        canvas {
+            border: 3px solid #e9ecef;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+        }
+
+        .control-group {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #007bff;
+        }
+
+        .control-group label {
+            display: block;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slider {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: #dee2e6;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #007bff;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,123,255,0.3);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #007bff;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,123,255,0.3);
+        }
+
+        .value-display {
+            min-width: 100px;
+            padding: 8px 12px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-align: center;
+            color: #007bff;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #2196f3;
+            transition: transform 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(33,150,243,0.2);
+        }
+
+        .result-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #1976d2;
+            font-family: 'Courier New', monospace;
+        }
+
+        .result-label {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-unit {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .calculation-steps {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #28a745;
+        }
+
+        .step {
+            margin: 15px 0;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border-left: 3px solid #28a745;
+        }
+
+        .formula {
+            background: #e7f3ff;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Times New Roman', serif;
+            font-size: 16px;
+            text-align: center;
+            margin: 10px 0;
+            border: 2px solid #007bff;
+        }
+
+        .equation {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1976d2;
+        }
+
+        .reset-button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .reset-button:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220,53,69,0.3);
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            padding: 5px 10px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .slider-container {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .value-display {
+                min-width: auto;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧪 Ejercicio 17.3 McCabe Smith & Harriott</h1>
+            <h2>Absorción de Etanol - Difusión Unicomponente</h2>
+            <p>Simulación Interactiva para Estudiantes de Bioingeniería</p>
+        </header>
+
+        <div class="main-grid">
+            <div class="simulation-panel">
+                <h3>🔬 Visualización del Proceso</h3>
+                <canvas id="simulationCanvas" width="600" height="400"></canvas>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #e74c3c;"></div>
+                        <span>Etanol (fase vapor)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #3498db;"></div>
+                        <span>Agua (vapor)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #f39c12;"></div>
+                        <span>Película gaseosa</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #2ecc71;"></div>
+                        <span>Interfaz líquida</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-panel">
+                <h3>⚙️ Parámetros del Proceso</h3>
+
+                <div class="control-group">
+                    <label>Temperatura (°C)</label>
+                    <div class="slider-container">
+                        <input type="range" class="slider" id="temperature" min="70" max="120" value="97" step="1">
+                        <span class="value-display" id="tempValue">97 °C</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Espesor película (mm)</label>
+                    <div class="slider-container">
+                        <input type="range" class="slider" id="thickness" min="0.05" max="0.20" value="0.10" step="0.01">
+                        <span class="value-display" id="thicknessValue">0.10 mm</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Fracción molar exterior (y<sub>A</sub>)</label>
+                    <div class="slider-container">
+                        <input type="range" class="slider" id="yA" min="0.60" max="0.95" value="0.80" step="0.01">
+                        <span class="value-display" id="yAValue">0.80</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Fracción molar interfaz (y<sub>Ai</sub>)</label>
+                    <div class="slider-container">
+                        <input type="range" class="slider" id="yAi" min="0.05" max="0.25" value="0.10" step="0.01">
+                        <span class="value-display" id="yAiValue">0.10</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Área de transferencia (m²)</label>
+                    <div class="slider-container">
+                        <input type="range" class="slider" id="area" min="1" max="20" value="10" step="1">
+                        <span class="value-display" id="areaValue">10 m²</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Difusividad a 25°C (cm²/s)</label>
+                    <div class="slider-container">
+                        <input type="range" class="slider" id="diffusivity" min="0.10" max="0.25" value="0.15" step="0.01">
+                        <span class="value-display" id="diffusivityValue">0.15 cm²/s</span>
+                    </div>
+                </div>
+
+                <button class="reset-button" onclick="resetToDefault()">🔄 Valores por Defecto</button>
+            </div>
+        </div>
+
+        <div class="results-panel">
+            <h3>📊 Resultados y Cálculos</h3>
+            
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-label">Difusividad Corregida</div>
+                    <div class="result-value" id="diffusivityCorrected">2.19×10⁻⁵</div>
+                    <div class="result-unit">m²/s a la temperatura del proceso</div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-label">Densidad Molar del Gas</div>
+                    <div class="result-value" id="molarDensity">32.9</div>
+                    <div class="result-unit">mol/m³ (gas ideal)</div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-label">Flujo Molar</div>
+                    <div class="result-value" id="molarFlux">10.9</div>
+                    <div class="result-unit">mol/m²·s</div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-label">Caudal Másico Total</div>
+                    <div class="result-value" id="massFlow">1.80×10⁴</div>
+                    <div class="result-unit">kg/h de etanol</div>
+                </div>
+            </div>
+
+            <div class="calculation-steps">
+                <h4>📝 Pasos de Cálculo Detallados</h4>
+                
+                <div class="step">
+                    <strong>Paso 1: Corrección de difusividad por temperatura</strong>
+                    <div class="formula">
+                        <div class="equation">D<sub>T</sub> = D<sub>25</sub> × (T/298)¹·⁷⁵</div>
+                    </div>
+                    <p id="step1Result">D₉₇ = 0.15×10⁻⁴ × (370/298)¹·⁷⁵ = 2.19×10⁻⁵ m²/s</p>
+                </div>
+
+                <div class="step">
+                    <strong>Paso 2: Densidad molar del gas (gas ideal)</strong>
+                    <div class="formula">
+                        <div class="equation">ρ<sub>M</sub> = P/(R×T)</div>
+                    </div>
+                    <p id="step2Result">ρₘ = 101325/(8.314×370) = 32.9 mol/m³</p>
+                </div>
+
+                <div class="step">
+                    <strong>Paso 3: Flujo molar (Difusión unicomponente)</strong>
+                    <div class="formula">
+                        <div class="equation">N<sub>A</sub> = -(D×ρ<sub>M</sub>/δ) × ln[(1-y<sub>A</sub>)/(1-y<sub>Ai</sub>)]</div>
+                    </div>
+                    <p id="step3Result">N_A = -(2.19×10⁻⁵×32.9)/(1.0×10⁻⁴) × ln[(1-0.80)/(1-0.10)] = 10.9 mol/m²·s</p>
+                </div>
+
+                <div class="step">
+                    <strong>Paso 4: Caudal másico total</strong>
+                    <div class="formula">
+                        <div class="equation">ṁ = N<sub>A</sub> × A × MW<sub>etanol</sub> × 3600/1000</div>
+                    </div>
+                    <p id="step4Result">ṁ = 10.9 × 10 × 46.07 × 3.6 = 1.80×10⁴ kg/h</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let canvas, ctx;
+        let animationTime = 0;
+        let animationId;
+
+        // Constantes
+        const R = 8.314; // J/(mol·K)
+        const P = 101325; // Pa
+        const MW_ETANOL = 46.07; // g/mol
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            canvas = document.getElementById('simulationCanvas');
+            ctx = canvas.getContext('2d');
+            
+            // Inicializar displays primero
+            initializeDisplays();
+            setupEventListeners();
+            calculateAndUpdate();
+            startAnimation();
+        });
+
+        function initializeDisplays() {
+            // Inicializar valores de display
+            updateDisplay('temperature', 97);
+            updateDisplay('thickness', 0.10);
+            updateDisplay('yA', 0.80);
+            updateDisplay('yAi', 0.10);
+            updateDisplay('area', 10);
+            updateDisplay('diffusivity', 0.15);
+        }
+
+        function setupEventListeners() {
+            const sliders = ['temperature', 'thickness', 'yA', 'yAi', 'area', 'diffusivity'];
+            
+            sliders.forEach(sliderId => {
+                const slider = document.getElementById(sliderId);
+                slider.addEventListener('input', function() {
+                    updateDisplay(sliderId, this.value);
+                    calculateAndUpdate();
+                });
+            });
+        }
+
+        function updateDisplay(sliderId, value) {
+            const displays = {
+                'temperature': () => `${value} °C`,
+                'thickness': () => `${value} mm`,
+                'yA': () => value,
+                'yAi': () => value,
+                'area': () => `${value} m²`,
+                'diffusivity': () => `${value} cm²/s`
+            };
+            
+            const displayElement = document.getElementById(sliderId + 'Value');
+            if (displayElement && displays[sliderId]) {
+                displayElement.textContent = displays[sliderId]();
+            }
+        }
+
+        function calculateAndUpdate() {
+            // Obtener valores de los sliders con verificación
+            const tempSlider = document.getElementById('temperature');
+            const thicknessSlider = document.getElementById('thickness');
+            const yASlider = document.getElementById('yA');
+            const yAiSlider = document.getElementById('yAi');
+            const areaSlider = document.getElementById('area');
+            const diffusivitySlider = document.getElementById('diffusivity');
+            
+            if (!tempSlider || !thicknessSlider || !yASlider || !yAiSlider || !areaSlider || !diffusivitySlider) {
+                console.log('Algunos elementos del DOM no están disponibles aún');
+                return;
+            }
+            
+            const T = parseFloat(tempSlider.value) + 273.15; // K
+            const delta = parseFloat(thicknessSlider.value) * 1e-3; // m
+            const yA = parseFloat(yASlider.value);
+            const yAi = parseFloat(yAiSlider.value);
+            const A = parseFloat(areaSlider.value);
+            const D25 = parseFloat(diffusivitySlider.value) * 1e-4; // m²/s
+
+            // Cálculos paso a paso
+            
+            // Paso 1: Difusividad corregida
+            const DT = D25 * Math.pow(T / 298.15, 1.75);
+            
+            // Paso 2: Densidad molar
+            const rhoM = P / (R * T);
+            
+            // Paso 3: Flujo molar (difusión unicomponente)
+            const term = Math.log((1 - yA) / (1 - yAi));
+            const NA = -(DT * rhoM / delta) * term;
+            const NA_abs = Math.abs(NA); // Tomamos valor absoluto para el flujo
+            
+            // Paso 4: Caudal másico
+            const massFlow = NA_abs * A * MW_ETANOL * 3600 / 1000; // kg/h
+            
+            // Actualizar resultados en pantalla con verificación
+            const diffusivityElement = document.getElementById('diffusivityCorrected');
+            const molarDensityElement = document.getElementById('molarDensity');
+            const molarFluxElement = document.getElementById('molarFlux');
+            const massFlowElement = document.getElementById('massFlow');
+            
+            if (diffusivityElement) diffusivityElement.textContent = DT.toExponential(2);
+            if (molarDensityElement) molarDensityElement.textContent = rhoM.toFixed(1);
+            if (molarFluxElement) molarFluxElement.textContent = NA_abs.toFixed(1);
+            if (massFlowElement) massFlowElement.textContent = massFlow.toExponential(2);
+            
+            // Actualizar pasos de cálculo
+            updateCalculationSteps(T, delta, yA, yAi, A, D25, DT, rhoM, NA_abs, massFlow);
+        }
+
+        function updateCalculationSteps(T, delta, yA, yAi, A, D25, DT, rhoM, NA, massFlow) {
+            const step1Element = document.getElementById('step1Result');
+            const step2Element = document.getElementById('step2Result');
+            const step3Element = document.getElementById('step3Result');
+            const step4Element = document.getElementById('step4Result');
+            
+            if (step1Element) {
+                step1Element.textContent = 
+                    `D₉₇ = ${(D25*1e4).toFixed(2)}×10⁻⁴ × (${T.toFixed(0)}/298)¹·⁷⁵ = ${DT.toExponential(2)} m²/s`;
+            }
+            
+            if (step2Element) {
+                step2Element.textContent = 
+                    `ρₘ = ${P}/(8.314×${T.toFixed(0)}) = ${rhoM.toFixed(1)} mol/m³`;
+            }
+            
+            if (step3Element) {
+                step3Element.textContent = 
+                    `N_A = -(${DT.toExponential(2)}×${rhoM.toFixed(1)})/(${(delta*1e3).toFixed(1)}×10⁻³) × ln[(1-${yA})/(1-${yAi})] = ${NA.toFixed(1)} mol/m²·s`;
+            }
+            
+            if (step4Element) {
+                step4Element.textContent = 
+                    `ṁ = ${NA.toFixed(1)} × ${A} × ${MW_ETANOL} × 3.6 = ${massFlow.toExponential(2)} kg/h`;
+            }
+        }
+
+        function resetToDefault() {
+            document.getElementById('temperature').value = 97;
+            document.getElementById('thickness').value = 0.10;
+            document.getElementById('yA').value = 0.80;
+            document.getElementById('yAi').value = 0.10;
+            document.getElementById('area').value = 10;
+            document.getElementById('diffusivity').value = 0.15;
+            
+            // Actualizar displays
+            updateDisplay('temperature', 97);
+            updateDisplay('thickness', 0.10);
+            updateDisplay('yA', 0.80);
+            updateDisplay('yAi', 0.10);
+            updateDisplay('area', 10);
+            updateDisplay('diffusivity', 0.15);
+            
+            calculateAndUpdate();
+        }
+
+        function startAnimation() {
+            animateSimulation();
+        }
+
+        function animateSimulation() {
+            animationTime += 0.02;
+            drawSimulation();
+            animationId = requestAnimationFrame(animateSimulation);
+        }
+
+        function drawSimulation() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Obtener valores actuales
+            const yA = parseFloat(document.getElementById('yA').value);
+            const yAi = parseFloat(document.getElementById('yAi').value);
+            const thickness = parseFloat(document.getElementById('thickness').value);
+            
+            // Dimensiones del sistema
+            const filmStart = canvas.width * 0.25;
+            const filmWidth = (thickness / 0.20) * canvas.width * 0.15; // Escala proporcional
+            const filmEnd = filmStart + filmWidth;
+            const height = canvas.height * 0.8;
+            const topMargin = canvas.height * 0.1;
+            
+            // Dibujar fase vapor (exterior)
+            const vaporGradient = ctx.createLinearGradient(0, 0, filmStart, 0);
+            vaporGradient.addColorStop(0, 'rgba(231, 76, 60, 0.4)');
+            vaporGradient.addColorStop(1, 'rgba(231, 76, 60, 0.2)');
+            ctx.fillStyle = vaporGradient;
+            ctx.fillRect(0, topMargin, filmStart, height);
+            
+            // Dibujar película gaseosa
+            const filmGradient = ctx.createLinearGradient(filmStart, 0, filmEnd, 0);
+            filmGradient.addColorStop(0, 'rgba(243, 156, 18, 0.6)');
+            filmGradient.addColorStop(1, 'rgba(243, 156, 18, 0.3)');
+            ctx.fillStyle = filmGradient;
+            ctx.fillRect(filmStart, topMargin, filmWidth, height);
+            
+            // Dibujar interfaz líquida
+            ctx.fillStyle = 'rgba(46, 204, 113, 0.7)';
+            ctx.fillRect(filmEnd, topMargin, canvas.width - filmEnd, height);
+            
+            // Líneas de separación
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([]);
+            
+            // Línea inicio película
+            ctx.beginPath();
+            ctx.moveTo(filmStart, topMargin);
+            ctx.lineTo(filmStart, topMargin + height);
+            ctx.stroke();
+            
+            // Línea interfaz
+            ctx.beginPath();
+            ctx.moveTo(filmEnd, topMargin);
+            ctx.lineTo(filmEnd, topMargin + height);
+            ctx.stroke();
+            
+            // Gradiente de concentración visual
+            const concentrationGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+            concentrationGradient.addColorStop(0, `rgba(231, 76, 60, ${yA * 0.8})`);
+            concentrationGradient.addColorStop(filmStart/canvas.width, `rgba(231, 76, 60, ${yA * 0.6})`);
+            concentrationGradient.addColorStop(filmEnd/canvas.width, `rgba(231, 76, 60, ${yAi * 0.8})`);
+            concentrationGradient.addColorStop(1, `rgba(231, 76, 60, ${yAi * 0.4})`);
+            
+            ctx.fillStyle = concentrationGradient;
+            ctx.fillRect(0, canvas.height - 40, canvas.width, 30);
+            
+            // Moléculas de etanol animadas
+            drawMolecules(yA, yAi, filmStart, filmEnd, topMargin, height);
+            
+            // Flechas de flujo
+            drawFlowArrows(filmStart, filmEnd, topMargin, height);
+            
+            // Etiquetas
+            drawLabels(filmStart, filmEnd, yA, yAi, thickness);
+            
+            // Curva de concentración
+            drawConcentrationProfile(filmStart, filmEnd, yA, yAi, topMargin, height);
+        }
+
+        function drawMolecules(yA, yAi, filmStart, filmEnd, topMargin, height) {
+            // Moléculas en fase vapor (etanol - rojas)
+            const numMoleculesVapor = Math.floor(yA * 25);
+            for (let i = 0; i < numMoleculesVapor; i++) {
+                const x = 20 + (i % 5) * (filmStart - 40) / 5 + Math.sin(animationTime + i) * 8;
+                const y = topMargin + 30 + (i % 4) * (height - 60) / 4 + Math.cos(animationTime * 0.7 + i) * 5;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 6, 0, Math.PI * 2);
+                ctx.fillStyle = '#e74c3c';
+                ctx.fill();
+                ctx.strokeStyle = '#c0392b';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Etiqueta ocasional
+                if (i % 8 === 0) {
+                    ctx.fillStyle = '#2c3e50';
+                    ctx.font = 'bold 8px Arial';
+                    ctx.fillText('EtOH', x - 10, y - 10);
+                }
+            }
+            
+            // Moléculas en película (gradiente)
+            const numMoleculesFilm = 12;
+            for (let i = 0; i < numMoleculesFilm; i++) {
+                const progress = i / (numMoleculesFilm - 1);
+                const x = filmStart + progress * (filmEnd - filmStart) + Math.sin(animationTime * 0.5 + i) * 3;
+                const y = topMargin + 40 + (i % 3) * (height - 80) / 3 + Math.cos(animationTime * 0.8 + i) * 4;
+                
+                // Concentración interpolada
+                const concentration = yA * (1 - progress) + yAi * progress;
+                const size = 4 + concentration * 4;
+                const alpha = 0.6 + concentration * 0.4;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(231, 76, 60, ${alpha})`;
+                ctx.fill();
+                
+                // Flecha de movimiento hacia la interfaz
+                if (i % 4 === 0) {
+                    const arrowX = x + 8;
+                    const arrowY = y;
+                    drawArrow(ctx, arrowX, arrowY, arrowX + 15, arrowY, '#e74c3c', 0.5);
+                }
+            }
+            
+            // Moléculas en interfaz (menos cantidad)
+            const numMoleculesInterface = Math.floor(yAi * 15);
+            for (let i = 0; i < numMoleculesInterface; i++) {
+                const x = filmEnd + 15 + (i % 3) * 30 + Math.sin(animationTime * 0.3 + i) * 2;
+                const y = topMargin + 50 + (i % 4) * (height - 100) / 4;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(231, 76, 60, 0.6)';
+                ctx.fill();
+            }
+            
+            // Moléculas de agua (azules, estáticas en el vapor)
+            const numWater = 15;
+            for (let i = 0; i < numWater; i++) {
+                const x = 30 + (i % 4) * (filmStart - 60) / 4 + Math.sin(animationTime * 0.2 + i) * 2;
+                const y = topMargin + 60 + (i % 3) * (height - 120) / 3 + Math.cos(animationTime * 0.3 + i) * 2;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#3498db';
+                ctx.fill();
+                ctx.strokeStyle = '#2980b9';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                
+                if (i % 10 === 0) {
+                    ctx.fillStyle = '#2c3e50';
+                    ctx.font = 'bold 7px Arial';
+                    ctx.fillText('H₂O', x - 8, y - 8);
+                }
+            }
+        }
+
+        function drawFlowArrows(filmStart, filmEnd, topMargin, height) {
+            const numArrows = 5;
+            for (let i = 0; i < numArrows; i++) {
+                const x = filmStart + (i + 1) * (filmEnd - filmStart) / (numArrows + 1);
+                const y = topMargin + height/2 + (i % 2 - 0.5) * 40;
+                
+                const opacity = 0.5 + 0.3 * Math.sin(animationTime * 2 + i);
+                drawArrow(ctx, x - 15, y, x + 15, y, '#f39c12', opacity);
+            }
+        }
+
+        function drawArrow(ctx, fromX, fromY, toX, toY, color, opacity = 1) {
+            ctx.globalAlpha = opacity;
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 3;
+            
+            const angle = Math.atan2(toY - fromY, toX - fromX);
+            const headLength = 8;
+            
+            // Línea principal
+            ctx.beginPath();
+            ctx.moveTo(fromX, fromY);
+            ctx.lineTo(toX, toY);
+            ctx.stroke();
+            
+            // Cabeza de flecha
+            ctx.beginPath();
+            ctx.moveTo(toX, toY);
+            ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6), toY - headLength * Math.sin(angle - Math.PI / 6));
+            ctx.lineTo(toX - headLength * Math.cos(angle + Math.PI / 6), toY - headLength * Math.sin(angle + Math.PI / 6));
+            ctx.closePath();
+            ctx.fill();
+            
+            ctx.globalAlpha = 1;
+        }
+
+        function drawLabels(filmStart, filmEnd, yA, yAi, thickness) {
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = 'bold 16px Arial';
+            
+            // Títulos de zonas
+            ctx.fillText('Fase Vapor', 10, 25);
+            ctx.fillText('Película', filmStart + 5, 25);
+            ctx.fillText('Interfaz', filmEnd + 10, 25);
+            
+            ctx.font = '14px Arial';
+            ctx.fillText('(Mezcla EtOH-H₂O)', 10, 45);
+            ctx.fillText(`δ = ${thickness} mm`, filmStart + 5, 45);
+            ctx.fillText('(Líquido)', filmEnd + 10, 45);
+            
+            // Concentraciones
+            ctx.font = 'bold 18px Arial';
+            ctx.fillStyle = '#e74c3c';
+            ctx.fillText(`y_A = ${yA}`, 10, canvas.height - 60);
+            ctx.fillText(`y_Ai = ${yAi}`, filmEnd + 10, canvas.height - 60);
+            
+            // Flecha principal del proceso
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('Dirección del flujo neto', canvas.width/2 - 70, canvas.height - 10);
+            drawArrow(ctx, canvas.width/2 - 100, canvas.height - 20, canvas.width/2 + 100, canvas.height - 20, '#2c3e50', 1);
+        }
+
+        function drawConcentrationProfile(filmStart, filmEnd, yA, yAi, topMargin, height) {
+            // Gráfico de perfil de concentración en la parte superior
+            const graphY = topMargin - 50;
+            const graphHeight = 40;
+            
+            ctx.strokeStyle = '#34495e';
+            ctx.lineWidth = 2;
+            
+            // Ejes del gráfico
+            ctx.beginPath();
+            ctx.moveTo(filmStart, graphY);
+            ctx.lineTo(filmStart, graphY + graphHeight);
+            ctx.lineTo(filmEnd, graphY + graphHeight);
+            ctx.stroke();
+            
+            // Perfil de concentración (línea recta para difusión estacionaria)
+            ctx.strokeStyle = '#e74c3c';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(filmStart, graphY + graphHeight * (1 - yA));
+            ctx.lineTo(filmEnd, graphY + graphHeight * (1 - yAi));
+            ctx.stroke();
+            
+            // Etiquetas del gráfico
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = '10px Arial';
+            ctx.fillText('y_A', filmStart - 15, graphY + 5);
+            ctx.fillText('Posición', filmStart + (filmEnd - filmStart)/2 - 15, graphY + graphHeight + 15);
+        }
+    </script>
+</body>
+</html>
